@@ -1,16 +1,16 @@
 package acs.data;
 
+
 /**
  * 
  * @author 
  *
  */
 public enum ElementType {
-
-	BOTTLE_RECYCLE ("Bottle recycle"),
-	PAPER_RECYCLE ("Paper recycle"),
-	GLASS_RECYCLE ("Glass recycle"),
-	BOX_RECYCLE ("Box recycle");
+	BOTTLE_RECYCLE ("Bottle recycle item"),
+	PAPER_RECYCLE ("Paper recycle item"),
+	GLASS_RECYCLE ("Glass recycle item"),
+	BOX_RECYCLE ("Box recycle item");
     
 	private String name;
 
