@@ -7,6 +7,8 @@
 
 .project
 .classpath
+.settings/
+bin/
 
 
 # End of https://www.gitignore.io/api/code-java
