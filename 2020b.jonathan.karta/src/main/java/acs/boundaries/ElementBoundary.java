@@ -5,7 +5,7 @@ import java.util.Date;
 import acs.data.ElementAttr;
 import acs.data.ElementType;
 import acs.data.Location;
-import acs.data.User;
+import acs.data.UserGenerator;
 
 public class ElementBoundary {
 
@@ -15,7 +15,7 @@ public class ElementBoundary {
 	private boolean active;
 	private Location location;
 	private Date createTimeStamp;
-	private User createdBy;
+	private UserGenerator createdBy;
 	private ElementAttr elementAttr;
 
 	public ElementBoundary() {
@@ -23,7 +23,7 @@ public class ElementBoundary {
 	}
 
 	public ElementBoundary(String elementId, ElementType type, String name, boolean active, Location location,
-			Date createTimeStamp, User createdBy, ElementAttr elementAttr) {
+			Date createTimeStamp, UserGenerator createdBy, ElementAttr elementAttr) {
 		super();
 		this.elementId = elementId;
 		this.type = type;
@@ -75,11 +75,11 @@ public class ElementBoundary {
 		this.createTimeStamp = createTimeStamp;
 	}
 
-	public User getCreatedBy() {
+	public UserGenerator getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(User createdBy) {
+	public void setCreatedBy(UserGenerator createdBy) {
 		this.createdBy = createdBy;
 	}
 
