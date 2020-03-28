@@ -1,0 +1,13 @@
+# Created by https://www.gitignore.io/api/code-java
+# Edit at https://www.gitignore.io/?templates=code-java
+
+### Code-Java ###
+# Language Support for Java(TM) by Red Hat extension for Visual Studio Code - https://marketplace.visualstudio.com/items?itemName=redhat.java
+
+.project
+.classpath
+.settings/
+bin/
+
+
+# End of https://www.gitignore.io/api/code-java

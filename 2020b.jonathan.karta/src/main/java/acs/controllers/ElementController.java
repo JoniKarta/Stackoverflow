@@ -12,7 +12,7 @@ import acs.boundaries.ElementBoundary;
 import acs.data.ElementAttr;
 import acs.data.ElementType;
 import acs.data.Location;
-import acs.data.User;
+import acs.data.UserGenerator;
 import acs.data.UserRole;
 
 @RestController
@@ -24,7 +24,8 @@ public class ElementController {
 			@PathVariable("elementId") String elementId) {
 		return new ElementBoundary("1a8c4hred", ElementType.BOTTLE_RECYCLE,
 				ElementType.BOTTLE_RECYCLE.getName(), true,
-				new Location(32.115634, 34.115634),new Date(), 
-				new User(UserRole.MANAGER, "jonathan@gmail.com"), new ElementAttr());
+				new Location(32.115634, 34.519865),new Date(), 
+				new UserGenerator("jonathan@gmail.com"), new ElementAttr());
 	}
+
 }
