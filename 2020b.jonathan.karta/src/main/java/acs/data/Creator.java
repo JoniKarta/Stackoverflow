@@ -1,25 +1,25 @@
 package acs.data;
 
-
-public class UserGenerator {
+public class Creator {
 
 	private String userEmail;
 	
 	
-	public UserGenerator() {
+	public Creator() {
 		super();
 	}
 	
-	public UserGenerator(String userEmail) {
+	public Creator(String userEmail) {
 		super();
 		this.userEmail = userEmail;
 	}
 	
-	public String getUserEmail() {
+	
+	public String getCreatorEmail() {
 		return userEmail;
 	}
 	
-	public void setUserEmail(String userEmail) {
+	public void setCreatorEmail(String userEmail) {
 		this.userEmail = userEmail;
 	}
 
@@ -27,5 +27,8 @@ public class UserGenerator {
 	public String toString() {
 		return "User [userEmail=" + userEmail + "]";
 	}
+	
+	
+	
 	
 }

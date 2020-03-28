@@ -2,28 +2,29 @@ package acs.boundaries;
 
 import java.util.Date;
 
+import acs.data.Creator;
 import acs.data.ElementAttr;
 import acs.data.ElementType;
 import acs.data.Location;
-import acs.data.UserGenerator;
+
 
 public class ElementBoundary {
 
-	private String elementId;
+	private ElementId elementId;
 	private ElementType type;
 	private String name;
 	private boolean active;
 	private Location location;
 	private Date createTimeStamp;
-	private UserGenerator createdBy;
+	private Creator createdBy;
 	private ElementAttr elementAttr;
 
 	public ElementBoundary() {
 		super();
 	}
 
-	public ElementBoundary(String elementId, ElementType type, String name, boolean active, Location location,
-			Date createTimeStamp, UserGenerator createdBy, ElementAttr elementAttr) {
+	public ElementBoundary(ElementId elementId, ElementType type, String name, boolean active, Location location,
+			Date createTimeStamp, Creator createdBy, ElementAttr elementAttr) {
 		super();
 		this.elementId = elementId;
 		this.type = type;
@@ -35,11 +36,11 @@ public class ElementBoundary {
 		this.elementAttr = elementAttr;
 	}
 
-	public String getElementId() {
+	public ElementId getElementId() {
 		return elementId;
 	}
 
-	public void setElementId(String elementId) {
+	public void setElementId(ElementId elementId) {
 		this.elementId = elementId;
 	}
 
@@ -75,11 +76,11 @@ public class ElementBoundary {
 		this.createTimeStamp = createTimeStamp;
 	}
 
-	public UserGenerator getCreatedBy() {
+	public Creator getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(UserGenerator createdBy) {
+	public void setCreatedBy(Creator createdBy) {
 		this.createdBy = createdBy;
 	}
 
