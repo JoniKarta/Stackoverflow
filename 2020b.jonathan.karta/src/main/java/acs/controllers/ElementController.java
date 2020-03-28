@@ -24,8 +24,7 @@ public class ElementController {
 			@PathVariable("elementId") String elementId) {
 		return new ElementBoundary("1a8c4hred", ElementType.BOTTLE_RECYCLE,
 				ElementType.BOTTLE_RECYCLE.getName(), true,
-				new Location(32.115634, 34.51986),new Date(), 
+				new Location(32.115634, 34.115634),new Date(), 
 				new User(UserRole.MANAGER, "jonathan@gmail.com"), new ElementAttr());
 	}
-
 }
