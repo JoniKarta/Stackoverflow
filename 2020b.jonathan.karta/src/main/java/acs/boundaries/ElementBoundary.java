@@ -1,30 +1,28 @@
 package acs.boundaries;
 
 import java.util.Date;
+import java.util.Map;
 
 import acs.data.Creator;
-import acs.data.ElementAttr;
-import acs.data.ElementType;
 import acs.data.Location;
-
 
 public class ElementBoundary {
 
-	private ElementId elementId;
-	private ElementType type;
+	private String elementId;
+	private String type;
 	private String name;
 	private boolean active;
-	private Location location;
 	private Date createTimeStamp;
 	private Creator createdBy;
-	private ElementAttr elementAttr;
+	private Location location;
+	private Map<String, Object> elementAttr;
 
 	public ElementBoundary() {
 		super();
 	}
 
-	public ElementBoundary(ElementId elementId, ElementType type, String name, boolean active, Location location,
-			Date createTimeStamp, Creator createdBy, ElementAttr elementAttr) {
+	public ElementBoundary(String elementId, String type, String name, boolean active, Location location,
+			Date createTimeStamp, Creator createdBy, Map<String, Object> elementAttr) {
 		super();
 		this.elementId = elementId;
 		this.type = type;
@@ -36,19 +34,19 @@ public class ElementBoundary {
 		this.elementAttr = elementAttr;
 	}
 
-	public ElementId getElementId() {
+	public String getElementId() {
 		return elementId;
 	}
 
-	public void setElementId(ElementId elementId) {
+	public void setElementId(String elementId) {
 		this.elementId = elementId;
 	}
 
-	public ElementType getType() {
+	public String getType() {
 		return type;
 	}
 
-	public void setType(ElementType type) {
+	public void setType(String type) {
 		this.type = type;
 	}
 
@@ -84,11 +82,11 @@ public class ElementBoundary {
 		this.createdBy = createdBy;
 	}
 
-	public ElementAttr getElementAttr() {
+	public Map<String, Object> getElementAttr() {
 		return elementAttr;
 	}
 
-	public void setElementAttr(ElementAttr elementAttr) {
+	public void setElementAttr(Map<String, Object> elementAttr) {
 		this.elementAttr = elementAttr;
 	}
 
@@ -98,6 +96,13 @@ public class ElementBoundary {
 
 	public void setLocation(Location location) {
 		this.location = location;
+	}
+
+	@Override
+	public String toString() {
+		return "ElementBoundary [elementId=" + elementId + ", type=" + type + ", name=" + name + ", active=" + active
+				+ ", createTimeStamp=" + createTimeStamp + ", createdBy=" + createdBy + ", location=" + location
+				+ ", elementAttr=" + elementAttr + "]";
 	}
 
 }
