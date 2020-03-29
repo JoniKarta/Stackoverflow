@@ -1,21 +1,21 @@
 package acs.boundaries;
 
 public class Element {
-	private ElementId elementId;
+	private String elementId;
 
 	public Element() {
 	}
 
-	public Element(ElementId elementId) {
+	public Element(String elementId) {
 		super();
 		this.elementId = elementId;
 	}
 
-	public ElementId getElementId() {
+	public String getElementId() {
 		return elementId;
 	}
 
-	public void setElementId(ElementId elementId) {
+	public void setElementId(String elementId) {
 		this.elementId = elementId;
 	}
 
