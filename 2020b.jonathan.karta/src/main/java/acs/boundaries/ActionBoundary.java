@@ -4,28 +4,30 @@ import java.util.Date;
 import java.util.Map;
 
 import acs.data.Creator;
+import acs.data.Element;
+import acs.data.Invoker;
 
 public class ActionBoundary {
-	private String actionId; // may be changed to a class which contains domain-url and id
-	private String type; // may be changed to enum
+	private String actionId; 
+	private String type; 
 	private Element element; 
 	private Date createdTimestamp;
-	private Invoker invokedBy; // may be changed to class 'InvokedBy'
-	private Map<String, Object> actionAttr;
+	private Invoker invokedBy; 
+	private Map<String, Object> actionAttributes;
 
 	public ActionBoundary() {
 
 	}
 
 	public ActionBoundary(String actionId, String type, Element element, Date createdTimestamp, Invoker invokedBy,
-			Map<String, Object> actionAttr) {
+			Map<String, Object> actionAttributes) {
 		super();
 		this.actionId = actionId;
 		this.type = type;
 		this.element = element;
 		this.createdTimestamp = createdTimestamp;
 		this.invokedBy = invokedBy;
-		this.actionAttr = actionAttr;
+		this.actionAttributes = actionAttributes;
 	}
 
 	public String getActionId() {
@@ -52,6 +54,7 @@ public class ActionBoundary {
 		this.element = element;
 	}
 
+	
 	public Date getCreatedTimestamp() {
 		return createdTimestamp;
 	}
@@ -68,12 +71,14 @@ public class ActionBoundary {
 		this.invokedBy = invokedBy;
 	}
 
-	public Map<String, Object> getActionAttr() {
-		return actionAttr;
+
+	
+	public Map<String, Object> getActionAttributes() {
+		return actionAttributes;
 	}
 
-	public void setActionAttr(Map<String, Object> actionAttr) {
-		this.actionAttr = actionAttr;
+	public void setActionAttributes(Map<String, Object> actionAttributes) {
+		this.actionAttributes = actionAttributes;
 	}
 
 	@Override

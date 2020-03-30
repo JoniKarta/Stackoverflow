@@ -1,4 +1,4 @@
-package acs.boundaries;
+package acs.data;
 
 public class ElementId {
 	private String domain;

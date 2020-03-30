@@ -1,4 +1,4 @@
-package acs.boundaries;
+package acs.data;
 
 public class Invoker {
 	private String email;

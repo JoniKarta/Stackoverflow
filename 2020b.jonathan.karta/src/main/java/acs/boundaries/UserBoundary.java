@@ -5,16 +5,18 @@ import acs.data.UserRole;
 public class UserBoundary {
 	private String email;
 	private UserRole role;
+	private String userName;
 	private String avatar;
 
 	public UserBoundary() {
-		// TODO Auto-generated constructor stub
+
 	}
 
-	public UserBoundary(String email, UserRole role, String avatar) {
+	public UserBoundary(String email, UserRole role, String userName, String avatar) {
 		super();
 		this.email = email;
 		this.role = role;
+		this.userName = userName;
 		this.avatar = avatar;
 	}
 
@@ -32,6 +34,14 @@ public class UserBoundary {
 
 	public void setRole(UserRole role) {
 		this.role = role;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	public String getAvatar() {
