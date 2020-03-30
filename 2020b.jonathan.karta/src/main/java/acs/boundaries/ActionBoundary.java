@@ -3,13 +3,12 @@ package acs.boundaries;
 import java.util.Date;
 import java.util.Map;
 
-import acs.data.Creator;
 import acs.data.Element;
 import acs.data.Invoker;
 
 public class ActionBoundary {
-	private String actionId; 
 	private String type; 
+	private String actionId; 
 	private Element element; 
 	private Date createdTimestamp;
 	private Invoker invokedBy; 

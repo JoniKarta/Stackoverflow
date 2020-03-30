@@ -24,11 +24,13 @@ public class UserController {
 	}
 
 	@RequestMapping(path = "/acs/users/login/{userEmail}",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public UserBoundary UserBoundary(@PathVariable("userEmail") String userEmail) {
+	public UserBoundary getUserBoundary(@PathVariable("userEmail") String userEmail) {
 		// Manager - new UserBoundary("Miri@gmail.com", UserRole.MANAGER, "Miri", ";)") 
 		// Player - new UserBoundary("Noar@gmail.com", UserRole.ADMIN, "Naori", ";)")
 		// ADMIN - new UserBoundary("Gil@gmail.com", UserRole.PLAYER, "Gil", ";)")
 		return new UserBoundary("Miri@gmail.com", UserRole.MANAGER, "Miri", ";)") ;
 	}
+	
+	
 
 }

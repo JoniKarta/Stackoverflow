@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,6 +34,22 @@ public class ElementController {
 		ElementBoundary e5 = new ElementBoundary("1e", "PAPAER", "paper bin", false, new Location(32.115634, 34.51986), new Date(), new Creator("Miri@gmail.com"), new HashMap<String ,Object>());
 		ElementBoundary[] elements = {e1,e2,e3,e4,e5};
 		return elements;
+	}
+	
+	@RequestMapping(path = "/acs/elements/{managerEmail}", method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ElementBoundary createElementBoundary(@RequestBody ElementBoundary input, @PathVariable("managerEmail") String managerEmail) {
+		input.setCreateTimeStamp(new Date());
+		input.setCreatedBy(new Creator(managerEmail));
+		return input;
+	}
+
+	@RequestMapping(path = "/acs/elements/{managerEmail}/{elementId}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public void updateElement(@PathVariable("managerEmail")String managerEmail,
+			@PathVariable("elementId") String elementId,
+			@RequestBody ElementBoundary update) {
+
 	}
 
 }
