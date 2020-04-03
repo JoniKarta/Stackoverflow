@@ -40,7 +40,7 @@ public class ElementController {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ElementBoundary createElementBoundary(@RequestBody ElementBoundary input, @PathVariable("managerEmail") String managerEmail) {
-		input.setCreateTimeStamp(new Date());
+		input.setCreatedTimestamp(new Date());
 		input.setCreatedBy(new Creator(managerEmail));
 		return input;
 	}

@@ -12,7 +12,7 @@ public class ElementBoundary {
 	private String type;
 	private String name;
 	private boolean active;
-	private Date createTimeStamp;
+	private Date createdTimestamp;
 	private Creator createdBy;
 	private Location location;
 	private Map<String, Object> elementAttribute;
@@ -22,14 +22,14 @@ public class ElementBoundary {
 	}
 
 	public ElementBoundary(String elementId, String type, String name, boolean active, Location location,
-			Date createTimeStamp, Creator createdBy, Map<String, Object> elementAttribute) {
+			Date createdTimestamp, Creator createdBy, Map<String, Object> elementAttribute) {
 		super();
 		this.elementId = elementId;
 		this.type = type;
 		this.name = name;
 		this.active = active;
 		this.location = location;
-		this.createTimeStamp = createTimeStamp;
+		this.createdTimestamp = createdTimestamp;
 		this.createdBy = createdBy;
 		this.elementAttribute = elementAttribute;
 	}
@@ -66,12 +66,12 @@ public class ElementBoundary {
 		this.active = active;
 	}
 
-	public Date getCreateTimeStamp() {
-		return createTimeStamp;
+	public Date getCreatedTimestamp() {
+		return createdTimestamp;
 	}
 
-	public void setCreateTimeStamp(Date createTimeStamp) {
-		this.createTimeStamp = createTimeStamp;
+	public void setCreatedTimestamp(Date createdTimestamp) {
+		this.createdTimestamp = createdTimestamp;
 	}
 
 	public Creator getCreatedBy() {
@@ -103,7 +103,7 @@ public class ElementBoundary {
 	@Override
 	public String toString() {
 		return "ElementBoundary [elementId=" + elementId + ", type=" + type + ", name=" + name + ", active=" + active
-				+ ", createTimeStamp=" + createTimeStamp + ", createdBy=" + createdBy + ", location=" + location
+				+ ", createTimeStamp=" + createdTimestamp + ", createdBy=" + createdBy + ", location=" + location
 				+ ", elementAttr=" + elementAttribute + "]";
 	}
 

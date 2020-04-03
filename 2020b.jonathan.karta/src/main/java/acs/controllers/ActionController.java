@@ -6,11 +6,14 @@ import java.util.Map;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import acs.boundaries.ActionBoundary;
+import acs.boundaries.ElementBoundary;
+import acs.data.Creator;
 import acs.data.Element;
 import acs.data.Invoker;
 
@@ -33,6 +36,15 @@ public class ActionController {
 				new Element("25"), new Date(), 
 				new Invoker("admin@s.afeka.ac.il"), actionAttr)};
 		return actionList;
+	}
+	
+	@RequestMapping(path = "/acs/actions", method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	public Object createActionBoundary(@RequestBody ActionBoundary input) {
+		input.setCreatedTimestamp(new Date());
+		//input.setCreatedBy(new Creator(managerEmail));
+		return input;
 	}
 	
 }
