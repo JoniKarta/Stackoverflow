@@ -35,7 +35,7 @@ public class UserController {
 	
 	@RequestMapping(path = "/acs/admin/users/{adminEmail}", method = RequestMethod.DELETE)
 	public ResponseEntity<String> deleteAllUsers(@PathVariable("adminEmail") String adminEmail) {
-		boolean isDatabaseEmpty = true;
+		boolean isDatabaseEmpty = false; // imitate a full DB scenario
 
 		if (isDatabaseEmpty)
 			return new ResponseEntity<>("No users found in database", HttpStatus.NOT_FOUND);

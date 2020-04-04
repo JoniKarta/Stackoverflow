@@ -56,7 +56,7 @@ public class ElementController {
 
 	@RequestMapping(path = "/acs/admin/elements/{adminEmail}", method = RequestMethod.DELETE)
 	public ResponseEntity<String> deleteAllElements(@PathVariable("adminEmail") String adminEmail) {
-		boolean isDatabaseEmpty = true;
+		boolean isDatabaseEmpty = false; // imitate a full DB scenario
 
 		if (isDatabaseEmpty)
 			return new ResponseEntity<>("No actions found in database", HttpStatus.NOT_FOUND);

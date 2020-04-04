@@ -45,7 +45,7 @@ public class ActionController {
 
 	@RequestMapping(path = "/acs/admin/actions/{adminEmail}", method = RequestMethod.DELETE)
 	public ResponseEntity<String> deleteAllActions(@PathVariable("adminEmail") String adminEmail) {
-		boolean isDatabaseEmpty = true;
+		boolean isDatabaseEmpty = false; // imitate a full DB scenario
 
 		if (isDatabaseEmpty)
 			return new ResponseEntity<>("No actions found in database", HttpStatus.NOT_FOUND);
