@@ -1,6 +1,8 @@
 package acs.controllers;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,6 +33,16 @@ public class UserController {
 		return new UserBoundary("Miri@gmail.com", UserRole.MANAGER, "Miri", ";)") ;
 	}
 	
-	
+	@RequestMapping(path = "/acs/admin/users/{adminEmail}", method = RequestMethod.DELETE)
+	public ResponseEntity<String> deleteAllUsers(@PathVariable("adminEmail") String adminEmail) {
+		boolean isDatabaseEmpty = true;
+
+		if (isDatabaseEmpty)
+			return new ResponseEntity<>("No users found in database", HttpStatus.NOT_FOUND);
+
+		// elementService.deleteAll(); // delete elements from database
+		return new ResponseEntity<>("Deleted all users.", HttpStatus.OK);
+
+	}
 
 }
