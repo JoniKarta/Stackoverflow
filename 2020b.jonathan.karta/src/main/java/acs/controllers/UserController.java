@@ -7,9 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import acs.boundaries.ElementBoundary;
 import acs.boundaries.UserBoundary;
-import acs.data.Creator;
 import acs.data.UserRole;
 
 @RestController
