@@ -15,19 +15,7 @@ import acs.data.UserRole;
 @RestController
 public class UserController {
 
-	@RequestMapping(path = "/acs/admin/users/{adminEmail}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public UserBoundary[] getAllUserBoundary(@PathVariable("adminEmail") String adminEmail) {
-		UserBoundary[] userBoundary = { new UserBoundary("Jonathan@gmail.com", UserRole.PLAYER, "Joni", ":)"),
-				new UserBoundary("miri@gmail.com", UserRole.PLAYER, "Miri", ";)"),
-				new UserBoundary("naor@gmail.com", UserRole.PLAYER, "Noar", "0)"),
-				new UserBoundary("gil@gmail.com", UserRole.PLAYER, "Gil", "&)"),
-				new UserBoundary("dani@gmail.com", UserRole.PLAYER, "Dani", "$)") };
-		return userBoundary;
-	}
-
-	@RequestMapping(path = "/acs/users/login/{userEmail}", 
-			method = RequestMethod.GET, 
-			produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(path = "/acs/users/login/{userEmail}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public UserBoundary getUserBoundary(@PathVariable("userEmail") String userEmail) {
 		// Manager - new UserBoundary("Miri@gmail.com", UserRole.MANAGER, "Miri", ";)")
 		// Player - new UserBoundary("Noar@gmail.com", UserRole.ADMIN, "Naori", ";)")
@@ -35,21 +23,15 @@ public class UserController {
 		return new UserBoundary("Miri@gmail.com", UserRole.MANAGER, "Miri", ";)");
 	}
 
-	@RequestMapping(path = "/acs/users", 
-			method = RequestMethod.POST, 
-			produces = MediaType.APPLICATION_JSON_VALUE, 
-			consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(path = "/acs/users", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public UserBoundary createUserBoundary(@RequestBody UserBoundary input) {
 		//// ---- save to data base in the future ----- //////
-		//System.out.println(userEmail +", "+role+", "+name+", "+avatar);
 		return new UserBoundary("Miri@gmail.com", UserRole.MANAGER, "Miri", ";)");
 	}
 
-	@RequestMapping(path = "/acs/users/{userEmail}", 
-			method = RequestMethod.PUT, 
-			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void updateUser(@RequestBody UserBoundary input, 
-			@PathVariable("userEmail") String userEmail) {
+	@RequestMapping(path = "/acs/users/{userEmail}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public void updateUser(@RequestBody UserBoundary input, @PathVariable("userEmail") String userEmail) {
+		System.err.println(input);
 	}
 
 }

@@ -20,21 +20,6 @@ import acs.data.Invoker;
 @RestController
 public class ActionController {
 
-	@RequestMapping(path = "/acs/admin/actions/{adminEmail}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ActionBoundary[] getAllActions(@PathVariable("adminEmail") String adminEmail) {
-		Map<String, Object> actionAttr = new HashMap<>();
-		actionAttr.put("key1", "don't know what to write");
-		actionAttr.put("key2", "think again, still don't know what to write");
-		actionAttr.put("key3", "need a break from this actions attributes");
-		actionAttr.put("key4", 12.443);
-		ActionBoundary[] actionList = {
-				new ActionBoundary("3232", "type1", new Element("23"), new Date(), new Invoker("nisim@sl.com"),
-						actionAttr),
-
-				new ActionBoundary("4545", "type2", new Element("25"), new Date(), new Invoker("admin@s.afeka.ac.il"),
-						actionAttr) };
-		return actionList;
-	}
 
 	@RequestMapping(path = "/acs/actions", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public Object invokeAction(@RequestBody ActionBoundary input) {
@@ -42,17 +27,5 @@ public class ActionController {
 		// input.setCreatedBy(new Creator(managerEmail));
 		return input;
 	}
-
-	@RequestMapping(path = "/acs/admin/actions/{adminEmail}", method = RequestMethod.DELETE)
-	public ResponseEntity<String> deleteAllActions(@PathVariable("adminEmail") String adminEmail) {
-		boolean isDatabaseEmpty = false; // imitate a full DB scenario
-
-		if (isDatabaseEmpty)
-			return new ResponseEntity<>("No actions found in database", HttpStatus.NOT_FOUND);
-
-		// actionsService.deleteAll(); // delete actions from database
-		return new ResponseEntity<>("Deleted all actions.", HttpStatus.OK);
-
-	}
-
+	
 }

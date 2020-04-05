@@ -19,6 +19,22 @@ import acs.data.Location;
 
 @RestController
 public class ElementController {
+	
+	@RequestMapping(path = "/acs/elements/{managerEmail}", method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ElementBoundary createElementBoundary(@RequestBody ElementBoundary input, @PathVariable("managerEmail") String managerEmail) {
+		input.setCreatedTimestamp(new Date());
+		input.setCreatedBy(new Creator(managerEmail));
+		return input;
+	}
+
+	@RequestMapping(path = "/acs/elements/{managerEmail}/{elementId}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public void updateElement(@PathVariable("managerEmail")String managerEmail,
+			@PathVariable("elementId") String elementId,
+			@RequestBody ElementBoundary update) {
+
+	}
 
 	@RequestMapping(path = "/acs/elements/{userEmail}/{elementId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ElementBoundary getElementBoundary(@PathVariable("userEmail") String userEmail, @PathVariable("elementId") String elementId) {
@@ -38,31 +54,4 @@ public class ElementController {
 		return elements;
 	}
 	
-	@RequestMapping(path = "/acs/elements/{managerEmail}", method = RequestMethod.POST,
-			produces = MediaType.APPLICATION_JSON_VALUE,
-			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ElementBoundary createElementBoundary(@RequestBody ElementBoundary input, @PathVariable("managerEmail") String managerEmail) {
-		input.setCreatedTimestamp(new Date());
-		input.setCreatedBy(new Creator(managerEmail));
-		return input;
-	}
-
-	@RequestMapping(path = "/acs/elements/{managerEmail}/{elementId}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void updateElement(@PathVariable("managerEmail")String managerEmail,
-			@PathVariable("elementId") String elementId,
-			@RequestBody ElementBoundary update) {
-
-	}
-
-	@RequestMapping(path = "/acs/admin/elements/{adminEmail}", method = RequestMethod.DELETE)
-	public ResponseEntity<String> deleteAllElements(@PathVariable("adminEmail") String adminEmail) {
-		boolean isDatabaseEmpty = false; // imitate a full DB scenario
-
-		if (isDatabaseEmpty)
-			return new ResponseEntity<>("No actions found in database", HttpStatus.NOT_FOUND);
-
-		// elementService.deleteAll(); // delete elements from database
-		return new ResponseEntity<>("Deleted all elements.", HttpStatus.OK);
-
-	}
 }
