@@ -20,12 +20,11 @@ import acs.data.Invoker;
 @RestController
 public class ActionController {
 
-
 	@RequestMapping(path = "/acs/actions", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public Object invokeAction(@RequestBody ActionBoundary input) {
 		input.setCreatedTimestamp(new Date());
 		// input.setCreatedBy(new Creator(managerEmail));
 		return input;
 	}
-	
+
 }

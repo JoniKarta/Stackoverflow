@@ -23,41 +23,44 @@ public class AdminController {
 
 	// Delete All Users
 	@RequestMapping(path = "/acs/admin/users/{adminEmail}", method = RequestMethod.DELETE)
-	public ResponseEntity<String> deleteAllUsers(@PathVariable("adminEmail") String adminEmail) {
-		boolean isDatabaseEmpty = false; // imitate a full DB scenario
-
-		if (isDatabaseEmpty)
-			return new ResponseEntity<>("No actions found in database", HttpStatus.NOT_FOUND);
-
-		// elementService.deleteAll(); // delete elements from database
-		return new ResponseEntity<>("Deleted all elements.", HttpStatus.OK);
-
+	public /* ResponseEntity<String> */ void deleteAllUsers(@PathVariable("adminEmail") String adminEmail) {
+		/*
+		 * boolean isDatabaseEmpty = false; // imitate a full DB scenario
+		 * 
+		 * if (isDatabaseEmpty) return new
+		 * ResponseEntity<>("No actions found in database", HttpStatus.NOT_FOUND);
+		 * 
+		 * // elementService.deleteAll(); // delete elements from database return new
+		 * ResponseEntity<>("Deleted all elements.", HttpStatus.OK);
+		 */
 	}
 
 	// Delete All Elements
 	@RequestMapping(path = "/acs/admin/elements/{adminEmail}", method = RequestMethod.DELETE)
-	public ResponseEntity<String> deleteAllElements(@PathVariable("adminEmail") String adminEmail) {
-		boolean isDatabaseEmpty = false; // imitate a full DB scenario
-
-		if (isDatabaseEmpty)
-			return new ResponseEntity<>("No actions found in database", HttpStatus.NOT_FOUND);
-
-		// elementService.deleteAll(); // delete elements from database
-		return new ResponseEntity<>("Deleted all elements.", HttpStatus.OK);
-
+	public /* ResponseEntity<String> */ void deleteAllElements(@PathVariable("adminEmail") String adminEmail) {
+		/*
+		 * boolean isDatabaseEmpty = false; // imitate a full DB scenario
+		 * 
+		 * if (isDatabaseEmpty) return new
+		 * ResponseEntity<>("No actions found in database", HttpStatus.NOT_FOUND);
+		 * 
+		 * // elementService.deleteAll(); // delete elements from database return new
+		 * ResponseEntity<>("Deleted all elements.", HttpStatus.OK);
+		 */
 	}
 
 	// Delete All Actions
 	@RequestMapping(path = "/acs/admin/actions/{adminEmail}", method = RequestMethod.DELETE)
-	public ResponseEntity<String> deleteAllActions(@PathVariable("adminEmail") String adminEmail) {
-		boolean isDatabaseEmpty = false; // imitate a full DB scenario
-
-		if (isDatabaseEmpty)
-			return new ResponseEntity<>("No actions found in database", HttpStatus.NOT_FOUND);
-
-		// actionsService.deleteAll(); // delete actions from database
-		return new ResponseEntity<>("Deleted all actions.", HttpStatus.OK);
-
+	public /* ResponseEntity<String> */ void deleteAllActions(@PathVariable("adminEmail") String adminEmail) {
+		/*
+		 * boolean isDatabaseEmpty = false; // imitate a full DB scenario
+		 * 
+		 * if (isDatabaseEmpty) return new
+		 * ResponseEntity<>("No actions found in database", HttpStatus.NOT_FOUND);
+		 * 
+		 * // actionsService.deleteAll(); // delete actions from database return new
+		 * ResponseEntity<>("Deleted all actions.", HttpStatus.OK);
+		 */
 	}
 
 	// Get All User Boundary
