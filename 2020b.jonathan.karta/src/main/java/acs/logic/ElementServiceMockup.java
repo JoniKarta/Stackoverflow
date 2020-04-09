@@ -16,14 +16,14 @@ import org.springframework.stereotype.Service;
 import acs.boundaries.ElementBoundary;
 import acs.data.Creator;
 import acs.data.ElementEntity;
-import acs.data.EntityConverter;
+import acs.data.ElementConverter;
 
 @Service
 public class ElementServiceMockup implements ElementService {
 	private Map<Long, ElementEntity> database;
 
 	@Autowired
-	private EntityConverter entityCoverter;
+	private ElementConverter entityCoverter;
 	private AtomicLong nextId;
 
 	public ElementServiceMockup() {

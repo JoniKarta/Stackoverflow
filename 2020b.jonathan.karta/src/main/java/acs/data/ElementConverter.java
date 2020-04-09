@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import acs.boundaries.ElementBoundary;
 
 @Component
-public class EntityConverter {
+public class ElementConverter {
 	private ObjectMapper jackson;
 
 	@PostConstruct
@@ -67,6 +67,7 @@ public class EntityConverter {
 		return elementMarshaling;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Map<String, Object> unMarshElementAttribute(String input) {
 		Map<String, Object> elementAttribute;
 		try {

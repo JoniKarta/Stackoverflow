@@ -2,12 +2,10 @@ package acs.data;
 
 import java.util.Date;
 
-import acs.boundaries.UserRole;
-
 public class UserEntity {
 
 	private String email;
-	private UserRole role;
+	private UserRoleEntity role;
 	private String userName;
 	private String avatar;
 	private Date creation;
@@ -15,7 +13,7 @@ public class UserEntity {
 	public UserEntity() {
 	}
 
-	public UserEntity(String email, UserRole role, String userName, String avatar) {
+	public UserEntity(String email, UserRoleEntity role, String userName, String avatar) {
 		super();
 		this.email = email;
 		this.role = role;
@@ -31,11 +29,11 @@ public class UserEntity {
 		this.email = email;
 	}
 
-	public UserRole getRole() {
+	public UserRoleEntity getRole() {
 		return role;
 	}
 
-	public void setRole(UserRole role) {
+	public void setRole(UserRoleEntity role) {
 		this.role = role;
 	}
 

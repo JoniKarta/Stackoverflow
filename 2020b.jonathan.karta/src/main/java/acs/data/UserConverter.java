@@ -4,9 +4,8 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import acs.boundaries.UserBoundary;
+import acs.boundaries.UserRole;
 
 @Component
 public class UserConverter {
@@ -17,11 +16,12 @@ public class UserConverter {
 	}
 
 	public UserBoundary fromEntity(UserEntity user) {
+
 		try {
 			// There is no difference at the moment between UserEntity/Boundary
 			return new UserBoundary(
 				user.getEmail(),
-				user.getRole(),
+				user.getRole() != null ? UserRole.valueOf(user.getRole().name().toUpperCase()) : null,
 				user.getUserName(),
 				user.getAvatar());
 		} catch (Exception e) {
@@ -33,12 +33,11 @@ public class UserConverter {
 		try {
 			return new UserEntity(
 				user.getEmail(),
-				user.getRole(),
+				user.getRole() != null ? UserRoleEntity.valueOf(user.getRole().name().toLowerCase()) : null,
 				user.getUserName(),
 				user.getAvatar().toString());
 		} catch (Exception e) {
 			throw new RuntimeException("could not convert UserBoundary to UserEntity! "+user.toString());
 		}
 	}
-
 }
