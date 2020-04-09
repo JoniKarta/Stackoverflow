@@ -22,7 +22,7 @@ public class UserServiceMockup implements UserService {
 	private UserConverter userConverter;
 
 	public UserServiceMockup() {
-		System.err.println("Spring initialized me");
+		System.err.println("User service init");
 	}
 
 	@Autowired
@@ -61,24 +61,22 @@ public class UserServiceMockup implements UserService {
 		boolean dirty = false;
 
 		if (update.getAvatar() != null) {
-			 userB.setAvatar(update.getAvatar());
+			userB.setAvatar(update.getAvatar());
 			dirty = true;
 		}
-		
+
 		/** Unchangeable - email is the current DB key */
 		/*
 		 * if (update.getEmail() != null) { dirty = true; }
 		 */
 
 		if (update.getRole() != null) {
-			dirty = true;
-		}
-
-		if (update.getRole() != null) {
+			userB.setRole(update.getRole());
 			dirty = true;
 		}
 
 		if (update.getUserName() != null) {
+			userB.setUserName(update.getUserName());
 			dirty = true;
 		}
 
