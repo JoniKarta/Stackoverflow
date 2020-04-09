@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import acs.boundaries.ElementBoundary;
 
 @Component
-public class EntityConverter {
+public class ElementConverter {
 	private ObjectMapper jackson;
 
 	@PostConstruct
@@ -67,20 +67,21 @@ public class EntityConverter {
 		return elementMarshaling;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Map<String, Object> unMarshElementAttribute(String input) {
-		Map<String ,Object> elementAttribute; 
+		Map<String, Object> elementAttribute;
 		try {
 			elementAttribute = this.jackson.readValue(input, Map.class);
-		}catch(Exception e) {
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 		return elementAttribute;
 	}
 
 	public Long toEntityId(String elementId) {
-		if(elementId != null) {
-			return Long.parseLong(elementId);			
-		}else {
+		if (elementId != null) {
+			return Long.parseLong(elementId);
+		} else {
 			return null;
 		}
 	}

@@ -16,15 +16,16 @@ import org.springframework.stereotype.Service;
 import acs.boundaries.ElementBoundary;
 import acs.data.Creator;
 import acs.data.ElementEntity;
-import acs.data.EntityConverter;
+import acs.data.ElementConverter;
 
 @Service
 public class ElementServiceMockup implements ElementService {
 	private Map<Long, ElementEntity> database;
-	
+
 	@Autowired
-	private EntityConverter entityCoverter;
+	private ElementConverter entityCoverter;
 	private AtomicLong nextId;
+
 	public ElementServiceMockup() {
 		System.err.println("Element service init");
 	}
@@ -50,33 +51,33 @@ public class ElementServiceMockup implements ElementService {
 	@Override
 	public ElementBoundary update(String managerEmail, String elementId, ElementBoundary update) {
 		ElementBoundary existing = this.getSpecificElement(managerEmail, elementId);
-		//Note there are 3 attributes that not gets updated (elemendId,Date, createdBy) 
+		// Note there are 3 attributes that not gets updated (elemendId,Date, createdBy)
 		boolean dirty = false;
-		if(update.getType() != null) {
+		if (update.getType() != null) {
 			existing.setType(update.getType());
 			dirty = true;
 		}
-		
-		if(update.getName() != null) {
+
+		if (update.getName() != null) {
 			existing.setName(update.getName());
 			dirty = true;
 		}
-		
-		if(update.getActive() != existing.getActive()) {
+
+		if (update.getActive() != existing.getActive()) {
 			existing.setActive(update.getActive());
 			dirty = true;
 		}
-		
-		if(update.getLocation() != null) {
+
+		if (update.getLocation() != null) {
 			existing.setLocation(update.getLocation());
 			dirty = true;
 		}
-		if(update.getElementAttribute() != null) {
+		if (update.getElementAttribute() != null) {
 			existing.setElementAttribute(update.getElementAttribute());
 			dirty = true;
 		}
-		if(dirty) {
-			this.database.put(this.entityCoverter.toEntityId(elementId),this.entityCoverter.convertToEntity(existing));
+		if (dirty) {
+			this.database.put(this.entityCoverter.toEntityId(elementId), this.entityCoverter.convertToEntity(existing));
 		}
 		return existing;
 	}
@@ -89,7 +90,6 @@ public class ElementServiceMockup implements ElementService {
 		} else {
 			throw new ElementNotFoundException("Could not element for id: " + elementId);
 		}
-
 	}
 
 	@Override
@@ -101,7 +101,5 @@ public class ElementServiceMockup implements ElementService {
 	@Override
 	public void deleteAllElements(String adminEmail) {
 		this.database.clear();
-
 	}
-
 }

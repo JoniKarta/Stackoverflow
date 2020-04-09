@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import acs.boundaries.ActionBoundary;
 import acs.boundaries.UserBoundary;
+import acs.boundaries.UserRole;
 import acs.data.Element;
 import acs.data.Invoker;
-import acs.data.UserRole;
 
 @RestController
 public class AdminController {
