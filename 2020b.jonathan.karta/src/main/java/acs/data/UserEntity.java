@@ -1,16 +1,21 @@
-package acs.boundaries;
+package acs.data;
 
-public class UserBoundary {
+import java.util.Date;
+
+import acs.boundaries.UserRole;
+
+public class UserEntity {
+
 	private String email;
 	private UserRole role;
 	private String userName;
 	private String avatar;
+	private Date creation;
 
-	public UserBoundary() {
-
+	public UserEntity() {
 	}
 
-	public UserBoundary(String email, UserRole role, String userName, String avatar) {
+	public UserEntity(String email, UserRole role, String userName, String avatar) {
 		super();
 		this.email = email;
 		this.role = role;
@@ -50,9 +55,17 @@ public class UserBoundary {
 		this.avatar = avatar;
 	}
 
+	public Date getCreation() {
+		return creation;
+	}
+
+	public void setCreation(Date creation) {
+		this.creation = creation;
+	}
+
 	@Override
 	public String toString() {
-		return "UserBoundary [email=" + email + ", role=" + role + ", avatar=" + avatar + "]";
+		return "UserEntity [email=" + email + ", role=" + role + ", userName=" + userName + ", avatar=" + avatar + "]";
 	}
 
 }
