@@ -43,7 +43,7 @@ public class UserController {
 	public UserBoundary createUserBoundary(@RequestBody UserBoundary input) {
 		// @ Stub Implementation
 		/* return new UserBoundary("Miri@gmail.com", UserRole.MANAGER, "Miri", ";)"); */
-		
+		System.err.println(input);
 		return this.userService.createUser(input);
 	}
 
