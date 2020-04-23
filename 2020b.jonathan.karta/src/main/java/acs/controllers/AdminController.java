@@ -1,9 +1,5 @@
 package acs.controllers;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,18 +9,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import acs.boundaries.ActionBoundary;
 import acs.boundaries.UserBoundary;
-import acs.boundaries.UserRole;
-import acs.data.Element;
-import acs.data.Invoker;
 import acs.logic.ActionService;
+import acs.logic.ElementService;
+import acs.logic.UserService;
 
 @RestController
 public class AdminController {
 	private ActionService actionService;
+	private UserService userService;
+	private ElementService elementService;
 	
 	@Autowired
-	public void setActionService(ActionService actionService) {
+	public void setServices(ActionService actionService, UserService userService, ElementService elementService) {
 		this.actionService = actionService;
+		this.userService = userService;
+		this.elementService = elementService;
 	}
 
 	// Delete All Users
@@ -39,6 +38,7 @@ public class AdminController {
 		 * // elementService.deleteAll(); // delete elements from database return new
 		 * ResponseEntity<>("Deleted all elements.", HttpStatus.OK);
 		 */
+		this.userService.deleteAllUsers(adminEmail);
 	}
 
 	// Delete All Elements
@@ -53,6 +53,7 @@ public class AdminController {
 		 * // elementService.deleteAll(); // delete elements from database return new
 		 * ResponseEntity<>("Deleted all elements.", HttpStatus.OK);
 		 */
+		this.elementService.deleteAllElements(adminEmail);
 	}
 
 	// Delete All Actions
@@ -64,12 +65,15 @@ public class AdminController {
 	// Get All User Boundary
 	@RequestMapping(path = "/acs/admin/users/{adminEmail}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public UserBoundary[] getAllUserBoundary(@PathVariable("adminEmail") String adminEmail) {
-		UserBoundary[] userBoundary = { new UserBoundary("Jonathan@gmail.com", UserRole.PLAYER, "Joni", ":)"),
-				new UserBoundary("miri@gmail.com", UserRole.PLAYER, "Miri", ";)"),
-				new UserBoundary("naor@gmail.com", UserRole.PLAYER, "Noar", "0)"),
-				new UserBoundary("gil@gmail.com", UserRole.PLAYER, "Gil", "&)"),
-				new UserBoundary("dani@gmail.com", UserRole.PLAYER, "Dani", "$)") };
-		return userBoundary;
+		/*
+		 * UserBoundary[] userBoundary = { new UserBoundary("Jonathan@gmail.com",
+		 * UserRole.PLAYER, "Joni", ":)"), new UserBoundary("miri@gmail.com",
+		 * UserRole.PLAYER, "Miri", ";)"), new UserBoundary("naor@gmail.com",
+		 * UserRole.PLAYER, "Noar", "0)"), new UserBoundary("gil@gmail.com",
+		 * UserRole.PLAYER, "Gil", "&)"), new UserBoundary("dani@gmail.com",
+		 * UserRole.PLAYER, "Dani", "$)") }; return userBoundary;
+		 */
+		return this.userService.getAllUsers(adminEmail).toArray(new UserBoundary[0]);
 	}
 
 	// Get All Actions
