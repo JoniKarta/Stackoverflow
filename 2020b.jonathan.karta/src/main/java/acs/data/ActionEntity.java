@@ -1,25 +1,18 @@
-package acs.boundaries;
+package acs.data;
 
 import java.util.Date;
-import java.util.Map;
 
-import acs.data.Element;
-import acs.data.Invoker;
+public class ActionEntity {
 
-public class ActionBoundary {
-	private String actionId; 
-	private String type; 
-	private Element element; 
+	private Long actionId; // In the ActionBoundary it was String
+	private String type;
+	private Element element;
 	private Date createdTimestamp;
-	private Invoker invokedBy; 
-	private Map<String, Object> actionAttributes;
+	private Invoker invokedBy;
+	private String actionAttributes; // In the ActionBoundary it was map
 
-	public ActionBoundary() {
-
-	}
-
-	public ActionBoundary(String actionId, String type, Element element, Date createdTimestamp, Invoker invokedBy,
-			Map<String, Object> actionAttributes) {
+	public ActionEntity(Long actionId, String type, Element element, Date createdTimestamp, Invoker invokedBy,
+			String actionAttributes) {
 		super();
 		this.actionId = actionId;
 		this.type = type;
@@ -28,12 +21,12 @@ public class ActionBoundary {
 		this.invokedBy = invokedBy;
 		this.actionAttributes = actionAttributes;
 	}
-
-	public String getActionId() {
+	
+	public Long getActionId() {
 		return actionId;
 	}
 
-	public void setActionId(String actionId) {
+	public void setActionId(Long actionId) {
 		this.actionId = actionId;
 	}
 
@@ -53,7 +46,6 @@ public class ActionBoundary {
 		this.element = element;
 	}
 
-	
 	public Date getCreatedTimestamp() {
 		return createdTimestamp;
 	}
@@ -70,19 +62,12 @@ public class ActionBoundary {
 		this.invokedBy = invokedBy;
 	}
 
-
-	
-	public Map<String, Object> getActionAttributes() {
+	public String getActionAttributes() {
 		return actionAttributes;
 	}
 
-	public void setActionAttributes(Map<String, Object> actionAttributes) {
+	public void setActionAttributes(String actionAttributes) {
 		this.actionAttributes = actionAttributes;
-	}
-
-	@Override
-	public String toString() {
-		return "ActionBoundary [actionId=" + actionId + ", type=" + type + ", element=" + element + "]";
 	}
 
 }

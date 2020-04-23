@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,9 +16,16 @@ import acs.boundaries.UserBoundary;
 import acs.boundaries.UserRole;
 import acs.data.Element;
 import acs.data.Invoker;
+import acs.logic.ActionService;
 
 @RestController
 public class AdminController {
+	private ActionService actionService;
+	
+	@Autowired
+	public void setActionService(ActionService actionService) {
+		this.actionService = actionService;
+	}
 
 	// Delete All Users
 	@RequestMapping(path = "/acs/admin/users/{adminEmail}", method = RequestMethod.DELETE)
@@ -49,16 +57,8 @@ public class AdminController {
 
 	// Delete All Actions
 	@RequestMapping(path = "/acs/admin/actions/{adminEmail}", method = RequestMethod.DELETE)
-	public /* ResponseEntity<String> */ void deleteAllActions(@PathVariable("adminEmail") String adminEmail) {
-		/*
-		 * boolean isDatabaseEmpty = false; // imitate a full DB scenario
-		 * 
-		 * if (isDatabaseEmpty) return new
-		 * ResponseEntity<>("No actions found in database", HttpStatus.NOT_FOUND);
-		 * 
-		 * // actionsService.deleteAll(); // delete actions from database return new
-		 * ResponseEntity<>("Deleted all actions.", HttpStatus.OK);
-		 */
+	public void deleteAllActions(@PathVariable("adminEmail") String adminEmail) {
+		actionService.deleteAllActions(adminEmail);
 	}
 
 	// Get All User Boundary
@@ -75,18 +75,7 @@ public class AdminController {
 	// Get All Actions
 	@RequestMapping(path = "/acs/admin/actions/{adminEmail}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ActionBoundary[] getAllActions(@PathVariable("adminEmail") String adminEmail) {
-		Map<String, Object> actionAttr = new HashMap<>();
-		actionAttr.put("key1", "don't know what to write");
-		actionAttr.put("key2", "think again, still don't know what to write");
-		actionAttr.put("key3", "need a break from this actions attributes");
-		actionAttr.put("key4", 12.443);
-		ActionBoundary[] actionList = {
-				new ActionBoundary("3232", "type1", new Element("23"), new Date(), new Invoker("nisim@sl.com"),
-						actionAttr),
-
-				new ActionBoundary("4545", "type2", new Element("25"), new Date(), new Invoker("admin@s.afeka.ac.il"),
-						actionAttr) };
-		return actionList;
+		return actionService.getAllActions(adminEmail).toArray(new ActionBoundary[0]);
 	}
 
 }
