@@ -8,7 +8,7 @@ public class ElementEntity {
 	private String type;
 	private String name;
 	//TODO ask the team is it's should be Double or double
-	private boolean active; 
+	private Boolean active; 
 	private Date createdTimestamp;
 	private Creator createdBy;
 	private Location location;

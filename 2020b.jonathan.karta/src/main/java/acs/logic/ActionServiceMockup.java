@@ -29,7 +29,7 @@ public class ActionServiceMockup implements ActionService {
 	@PostConstruct
 	public void init() {
 		database = Collections.synchronizedMap(new TreeMap<>());
-		nextId = new AtomicLong(1L);
+		nextId = new AtomicLong(0L);
 	}
 
 	@Autowired

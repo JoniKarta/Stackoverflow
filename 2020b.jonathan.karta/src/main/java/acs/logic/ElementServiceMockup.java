@@ -61,7 +61,7 @@ public class ElementServiceMockup implements ElementService {
 			dirty = true;
 		}
 
-		if (update.getActive() != existing.getActive()) {
+		if (update.getActive() != null && update.getActive() != existing.getActive()) {
 			existing.setActive(update.getActive());
 			dirty = true;
 		}
