@@ -20,39 +20,30 @@ public class AdminController {
 	private ElementService elementService;
 	
 	@Autowired
-	public void setServices(ActionService actionService, UserService userService, ElementService elementService) {
+	public void setActionService(ActionService actionService) {
 		this.actionService = actionService;
+	}
+	
+	@Autowired
+	public void setUserService(UserService userService) {
 		this.userService = userService;
+	}
+	
+	@Autowired
+	public void setElementService(ElementService elementService) {
 		this.elementService = elementService;
 	}
-
+	
+	
 	// Delete All Users
 	@RequestMapping(path = "/acs/admin/users/{adminEmail}", method = RequestMethod.DELETE)
-	public /* ResponseEntity<String> */ void deleteAllUsers(@PathVariable("adminEmail") String adminEmail) {
-		/*
-		 * boolean isDatabaseEmpty = false; // imitate a full DB scenario
-		 * 
-		 * if (isDatabaseEmpty) return new
-		 * ResponseEntity<>("No actions found in database", HttpStatus.NOT_FOUND);
-		 * 
-		 * // elementService.deleteAll(); // delete elements from database return new
-		 * ResponseEntity<>("Deleted all elements.", HttpStatus.OK);
-		 */
+	public void deleteAllUsers(@PathVariable("adminEmail") String adminEmail) {
 		this.userService.deleteAllUsers(adminEmail);
 	}
 
 	// Delete All Elements
 	@RequestMapping(path = "/acs/admin/elements/{adminEmail}", method = RequestMethod.DELETE)
-	public /* ResponseEntity<String> */ void deleteAllElements(@PathVariable("adminEmail") String adminEmail) {
-		/*
-		 * boolean isDatabaseEmpty = false; // imitate a full DB scenario
-		 * 
-		 * if (isDatabaseEmpty) return new
-		 * ResponseEntity<>("No actions found in database", HttpStatus.NOT_FOUND);
-		 * 
-		 * // elementService.deleteAll(); // delete elements from database return new
-		 * ResponseEntity<>("Deleted all elements.", HttpStatus.OK);
-		 */
+	public void deleteAllElements(@PathVariable("adminEmail") String adminEmail) {
 		this.elementService.deleteAllElements(adminEmail);
 	}
 
@@ -65,14 +56,7 @@ public class AdminController {
 	// Get All User Boundary
 	@RequestMapping(path = "/acs/admin/users/{adminEmail}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public UserBoundary[] getAllUserBoundary(@PathVariable("adminEmail") String adminEmail) {
-		/*
-		 * UserBoundary[] userBoundary = { new UserBoundary("Jonathan@gmail.com",
-		 * UserRole.PLAYER, "Joni", ":)"), new UserBoundary("miri@gmail.com",
-		 * UserRole.PLAYER, "Miri", ";)"), new UserBoundary("naor@gmail.com",
-		 * UserRole.PLAYER, "Noar", "0)"), new UserBoundary("gil@gmail.com",
-		 * UserRole.PLAYER, "Gil", "&)"), new UserBoundary("dani@gmail.com",
-		 * UserRole.PLAYER, "Dani", "$)") }; return userBoundary;
-		 */
+	
 		return this.userService.getAllUsers(adminEmail).toArray(new UserBoundary[0]);
 	}
 

@@ -1,6 +1,5 @@
 package acs.controllers;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,10 +13,14 @@ import acs.logic.ElementService;
 
 @RestController
 public class ElementController {
+
+	private ElementService elementService;
+
 	
 	@Autowired
-	private ElementService elementService;
-	
+	public void setElementService(ElementService elementService) {
+		this.elementService = elementService;
+	}
 	@RequestMapping(path = "/acs/elements/{managerEmail}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ElementBoundary createElementBoundary(@RequestBody ElementBoundary input,
 			@PathVariable("managerEmail") String managerEmail) {
@@ -33,12 +36,12 @@ public class ElementController {
 	@RequestMapping(path = "/acs/elements/{userEmail}/{elementId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ElementBoundary getElementBoundary(@PathVariable("userEmail") String userEmail,
 			@PathVariable("elementId") String elementId) {
-		return this.elementService.getSpecificElement(userEmail,elementId);
+		return this.elementService.getSpecificElement(userEmail, elementId);
 	}
 
 	@RequestMapping(path = "/acs/elements/{userEmail}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ElementBoundary[] getAllElements(@PathVariable("userEmail") String userEmail) {
-				return this.elementService.getAll(userEmail).toArray(new ElementBoundary[0]);
+		return this.elementService.getAll(userEmail).toArray(new ElementBoundary[0]);
 	}
 
 }

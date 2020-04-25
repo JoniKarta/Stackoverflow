@@ -11,7 +11,7 @@ public class ElementBoundary {
 	private String elementId;
 	private String type;
 	private String name;
-	private boolean active;
+	private Boolean active;
 	private Date createdTimestamp;
 	private Creator createdBy;
 	private Location location;
@@ -21,7 +21,7 @@ public class ElementBoundary {
 		super();
 	}
 
-	public ElementBoundary(String elementId, String type, String name, boolean active, Location location,
+	public ElementBoundary(String elementId, String type, String name, Boolean active, Location location,
 			Date createdTimestamp, Creator createdBy, Map<String, Object> elementAttribute) {
 		super();
 		this.elementId = elementId;
@@ -81,8 +81,6 @@ public class ElementBoundary {
 	public void setCreatedBy(Creator createdBy) {
 		this.createdBy = createdBy;
 	}
-
-	
 	
 	public Map<String, Object> getElementAttribute() {
 		return elementAttribute;

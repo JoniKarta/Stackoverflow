@@ -7,11 +7,28 @@ public class ElementEntity {
 	private Long elementId; // In the ElementBoundary it was String
 	private String type;
 	private String name;
-	private boolean active;
+	//TODO ask the team is it's should be Double or double
+	private boolean active; 
 	private Date createdTimestamp;
 	private Creator createdBy;
 	private Location location;
 	private String elementAttribute; // In the ElementBoundary it was map
+
+	public ElementEntity() {
+	}
+	
+	public ElementEntity(Long elementId, String type, String name, boolean active, Date createdTimestamp,
+			Creator createdBy, Location location, String elementAttribute) {
+		super();
+		this.elementId = elementId;
+		this.type = type;
+		this.name = name;
+		this.active = active;
+		this.createdTimestamp = createdTimestamp;
+		this.createdBy = createdBy;
+		this.location = location;
+		this.elementAttribute = elementAttribute;
+	}
 
 	public Long getElementId() {
 		return elementId;
@@ -37,11 +54,11 @@ public class ElementEntity {
 		this.name = name;
 	}
 
-	public boolean getActive() {
+	public Boolean getActive() {
 		return active;
 	}
 
-	public void setActive(boolean active) {
+	public void setActive(Boolean active) {
 		this.active = active;
 	}
 

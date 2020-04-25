@@ -39,11 +39,9 @@ public class ElementServiceMockup implements ElementService {
 	@Override
 	public ElementBoundary create(String managerEmail, ElementBoundary input) {
 		Long newId = nextId.getAndIncrement();
-		// Convert ElementBoundary to entity to save in database
 		ElementEntity newElement = this.entityCoverter.convertToEntity(input);
 		newElement.setElementId(newId);
 		newElement.setCreatedTimestamp(new Date());
-		newElement.setCreatedBy(new Creator(managerEmail));
 		this.database.put(newId, newElement);
 		return this.entityCoverter.convertFromEntity(newElement);
 	}
@@ -51,7 +49,7 @@ public class ElementServiceMockup implements ElementService {
 	@Override
 	public ElementBoundary update(String managerEmail, String elementId, ElementBoundary update) {
 		ElementBoundary existing = this.getSpecificElement(managerEmail, elementId);
-		// Note there are 3 attributes that not gets updated (elemendId,Date, createdBy)
+		// Note there are 2 attributes that not gets updated (elemendId,Date)
 		boolean dirty = false;
 		if (update.getType() != null) {
 			existing.setType(update.getType());
@@ -88,7 +86,7 @@ public class ElementServiceMockup implements ElementService {
 		if (elementEntity != null) {
 			return this.entityCoverter.convertFromEntity(elementEntity);
 		} else {
-			throw new ElementNotFoundException("Could not element for id: " + elementId);
+			throw new ElementNotFoundException("Could not find element with id: " + elementId);
 		}
 	}
 

@@ -20,41 +20,15 @@ public class ElementConverter {
 	}
 
 	public ElementBoundary convertFromEntity(ElementEntity entity) {
-		ElementBoundary elementBoundary = new ElementBoundary();
-		elementBoundary.setElementId(this.fromEntityId((entity.getElementId())));
-		elementBoundary.setType(entity.getType());
-		elementBoundary.setName(entity.getName());
-		elementBoundary.setActive(entity.getActive());
-		elementBoundary.setCreatedTimestamp(entity.getCreatedTimestamp());
-		// TODO marshaling ?
-		elementBoundary.setCreatedBy(entity.getCreatedBy());
-
-		// TODO marshaling ?
-		elementBoundary.setLocation(entity.getLocation());
-
-		// TODO unmarshaling
-		elementBoundary.setElementAttribute(unMarshElementAttribute(entity.getElementAttribute()));
-
-		return elementBoundary;
+		return new ElementBoundary(this.fromEntityId((entity.getElementId())), entity.getType(), entity.getName(),
+				entity.getActive(), entity.getLocation(), entity.getCreatedTimestamp(), entity.getCreatedBy(),
+				unMarshElementAttribute(entity.getElementAttribute()));
 	}
 
 	public ElementEntity convertToEntity(ElementBoundary input) {
-		ElementEntity elementEntity = new ElementEntity();
-		elementEntity.setElementId(this.toEntityId((input.getElementId())));
-		elementEntity.setType(input.getType());
-		elementEntity.setName(input.getName());
-		elementEntity.setActive(input.getActive());
-		elementEntity.setCreatedTimestamp(input.getCreatedTimestamp());
-		// TODO marshaling ?
-		elementEntity.setCreatedBy(input.getCreatedBy());
-
-		// TODO marshaling ?
-		elementEntity.setLocation(input.getLocation());
-
-		// TODO marshaling
-		elementEntity.setElementAttribute(marshElementAttribute(input.getElementAttribute()));
-
-		return elementEntity;
+		return new ElementEntity(this.toEntityId((input.getElementId())), input.getType(), input.getName(),
+				input.getActive(), input.getCreatedTimestamp(), input.getCreatedBy(), input.getLocation(),
+				marshElementAttribute(input.getElementAttribute()));
 	}
 
 	public String marshElementAttribute(Map<String, Object> input) {
@@ -67,7 +41,6 @@ public class ElementConverter {
 		return elementMarshaling;
 	}
 
-	@SuppressWarnings("unchecked")
 	public Map<String, Object> unMarshElementAttribute(String input) {
 		Map<String, Object> elementAttribute;
 		try {
