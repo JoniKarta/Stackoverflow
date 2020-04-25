@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import acs.boundaries.ElementBoundary;
 import acs.data.ElementEntity;
+import acs.data.Creator;
 import acs.data.ElementConverter;
 
 @Service
@@ -39,6 +40,7 @@ public class ElementServiceMockup implements ElementService {
 	public ElementBoundary create(String managerEmail, ElementBoundary input) {
 		Long newId = nextId.getAndIncrement();
 		ElementEntity newElement = this.entityCoverter.convertToEntity(input);
+		newElement.setCreatedBy(new Creator(managerEmail));
 		newElement.setElementId(newId);
 		newElement.setCreatedTimestamp(new Date());
 		this.database.put(newId, newElement);
