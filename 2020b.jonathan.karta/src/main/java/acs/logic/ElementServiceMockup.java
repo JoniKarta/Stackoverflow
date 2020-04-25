@@ -49,7 +49,6 @@ public class ElementServiceMockup implements ElementService {
 
 	@Override
 	public ElementBoundary update(String managerEmail, String elementId, ElementBoundary update) {
-		System.err.println(update);
 		ElementBoundary existing = this.getSpecificElement(managerEmail, elementId);
 		// Note there are 2 attributes that not gets updated (elemendId,Date)
 		boolean dirty = false;

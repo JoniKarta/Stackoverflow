@@ -23,7 +23,6 @@ public class ActionServiceMockup implements ActionService {
 	private AtomicLong nextId;
 
 	public ActionServiceMockup() {
-		System.err.println("Action service init");
 	}
 
 	@PostConstruct
