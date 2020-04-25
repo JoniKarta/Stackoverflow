@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import acs.boundaries.ElementBoundary;
-import acs.data.Creator;
 import acs.data.ElementEntity;
 import acs.data.ElementConverter;
 
@@ -48,6 +47,7 @@ public class ElementServiceMockup implements ElementService {
 
 	@Override
 	public ElementBoundary update(String managerEmail, String elementId, ElementBoundary update) {
+		System.err.println(update);
 		ElementBoundary existing = this.getSpecificElement(managerEmail, elementId);
 		// Note there are 2 attributes that not gets updated (elemendId,Date)
 		boolean dirty = false;
@@ -59,6 +59,10 @@ public class ElementServiceMockup implements ElementService {
 		if (update.getName() != null) {
 			existing.setName(update.getName());
 			dirty = true;
+		}
+		
+		if(update.getCreatedBy() != null && update.getCreatedBy().getUserEmail() != existing.getCreatedBy().getUserEmail()) {
+			existing.getCreatedBy().setUserEmail((update.getCreatedBy().getUserEmail()));
 		}
 
 		if (update.getActive() != null && update.getActive() != existing.getActive()) {
