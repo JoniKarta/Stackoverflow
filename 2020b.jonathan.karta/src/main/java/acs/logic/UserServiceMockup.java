@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import acs.boundaries.UserBoundary;
+import acs.boundaries.UserRole;
 import acs.data.UserConverter;
 import acs.data.UserEntity;
 
@@ -70,7 +71,10 @@ public class UserServiceMockup implements UserService {
 		 * if (update.getEmail() != null) { dirty = true; }
 		 */
 
-		if (update.getRole() != null) {
+		if (update.getRole() != null
+				&& update.getRole() == UserRole.ADMIN
+				&& update.getRole() == UserRole.PLAYER
+				&& update.getRole() == UserRole.MANAGER) {
 			userB.setRole(update.getRole());
 			dirty = true;
 		}
