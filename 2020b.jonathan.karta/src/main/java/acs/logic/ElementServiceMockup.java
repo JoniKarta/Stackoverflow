@@ -21,15 +21,17 @@ import acs.data.ElementConverter;
 @Service
 public class ElementServiceMockup implements ElementService {
 	private Map<Long, ElementEntity> database;
-
-	@Autowired
 	private ElementConverter entityCoverter;
 	private AtomicLong nextId;
-
+	
 	public ElementServiceMockup() {
-		System.err.println("Element service init");
 	}
 
+	@Autowired
+	public void setEntityCoverter(ElementConverter entityCoverter) {
+		this.entityCoverter = entityCoverter;
+	}
+	
 	@PostConstruct
 	public void init() {
 		this.database = Collections.synchronizedMap(new TreeMap<>());
