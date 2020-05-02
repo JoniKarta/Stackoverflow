@@ -1,5 +1,8 @@
 package acs.data;
 
+import javax.persistence.Embeddable;
+
+@Embeddable
 public class Element {
 	private String elementId;
 

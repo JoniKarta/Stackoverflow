@@ -1,7 +1,6 @@
 package acs.data;
 
 import java.util.Map;
-
 import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,13 +17,13 @@ public class ActionConverter {
 	}
 
 	public ActionEntity convertToEntity(ActionBoundary action) {
-		return new ActionEntity(toEntityId(action.getActionId()), action.getType(), action.getElement(),
+		return new ActionEntity(action.getActionId(), action.getType(), action.getElement(),
 				action.getCreatedTimestamp(), action.getInvokedBy(),
 				marshActionAtrributes(action.getActionAttributes()));
 	}
 
 	public Object convertFromEntity(ActionEntity action) {
-		return new ActionBoundary(fromEntityId(action.getActionId()), action.getType(), action.getElement(),
+		return new ActionBoundary(action.getActionId(), action.getType(), action.getElement(),
 				action.getCreatedTimestamp(), action.getInvokedBy(),
 				unMarshActionAtrributes(action.getActionAttributes()));
 	}
@@ -50,20 +49,20 @@ public class ActionConverter {
 		return actionMarshaling;
 	}
 
-	public Long toEntityId(String actionId) {
-		if (actionId != null) {
-			return Long.parseLong(actionId);
-		} else {
-			return null;
-		}
-	}
+//	public Long toEntityId(String actionId) {
+//		if (actionId != null) {
+//			return Long.parseLong(actionId);
+//		} else {
+//			return null;
+//		}
+//	}
 
-	public String fromEntityId(Long actionId) {
-		if (actionId != null) {
-			return actionId.toString();
-		} else {
-			return null;
-		}
-	}
+//	public String fromEntityId(Long actionId) {
+//		if (actionId != null) {
+//			return actionId.toString();
+//		} else {
+//			return null;
+//		}
+//	}
 
 }

@@ -7,16 +7,13 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
-
 import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import acs.boundaries.ActionBoundary;
 import acs.data.ActionConverter;
 import acs.data.ActionEntity;
 
-@Service
+//@Service
 public class ActionServiceMockup implements ActionService {
 	private Map<Long, ActionEntity> database;
 	private ActionConverter actionConverter;
@@ -40,7 +37,7 @@ public class ActionServiceMockup implements ActionService {
 	public Object invokeAction(ActionBoundary action) {
 		Long newId = nextId.getAndIncrement();
 		ActionEntity entity = actionConverter.convertToEntity(action);
-		entity.setActionId(newId);
+		entity.setActionId(newId.toString());
 		entity.setCreatedTimestamp(new Date());
 		database.put(newId, entity);
 		return actionConverter.convertFromEntity(entity);

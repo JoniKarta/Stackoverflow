@@ -1,5 +1,8 @@
 package acs.data;
 
+import javax.persistence.Embeddable;
+
+@Embeddable
 public class Invoker {
 	private String email;
 
