@@ -8,7 +8,6 @@ public class Invoker {
 
 	
 	public Invoker() {
-		super();
 	}
 
 

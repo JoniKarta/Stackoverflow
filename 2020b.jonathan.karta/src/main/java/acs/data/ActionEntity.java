@@ -11,13 +11,13 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@Table(name="Actions")
+@Table(name="ACTIONS")
 public class ActionEntity {
 
 	private String actionId; // In the ActionBoundary it was String
 	private String type;
 	private Element element;
-	private Date createdTimestamp;
+	private Date creation;
 	private Invoker invokedBy;
 	private String actionAttributes; // In the ActionBoundary it was map
 	
@@ -25,13 +25,13 @@ public class ActionEntity {
 		
 	}
 
-	public ActionEntity(String actionId, String type, Element element, Date createdTimestamp, Invoker invokedBy,
+	public ActionEntity(String actionId, String type, Element element, Date creation, Invoker invokedBy,
 			String actionAttributes) {
 		super();
 		this.actionId = actionId;
 		this.type = type;
 		this.element = element;
-		this.createdTimestamp = createdTimestamp;
+		this.creation = creation;
 		this.invokedBy = invokedBy;
 		this.actionAttributes = actionAttributes;
 	}
@@ -63,12 +63,12 @@ public class ActionEntity {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	public Date getCreatedTimestamp() {
-		return createdTimestamp;
+	public Date getCreation() {
+		return creation;
 	}
 
-	public void setCreatedTimestamp(Date createdTimestamp) {
-		this.createdTimestamp = createdTimestamp;
+	public void setCreation(Date creation) {
+		this.creation = creation;
 	}
 
 	@Embedded

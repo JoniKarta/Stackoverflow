@@ -20,14 +20,26 @@ public class ElementConverter {
 	}
 
 	public ElementBoundary convertFromEntity(ElementEntity entity) {
-		return new ElementBoundary(this.fromEntityId((entity.getElementId())), entity.getType(), entity.getName(),
-				entity.getActive(), entity.getLocation(), entity.getCreatedTimestamp(), entity.getCreatedBy(),
+		return new ElementBoundary(
+				entity.getElementId(),
+				entity.getType(), 
+				entity.getName(),
+				entity.getActive(), 
+				entity.getLocation(), 
+				entity.getCreation(), 
+				entity.getCreatedBy(),
 				unMarshElementAttribute(entity.getElementAttribute()));
 	}
 
 	public ElementEntity convertToEntity(ElementBoundary input) {
-		return new ElementEntity(this.toEntityId((input.getElementId())), input.getType(), input.getName(),
-				input.getActive(), input.getCreatedTimestamp(), input.getCreatedBy(), input.getLocation(),
+		return new ElementEntity(
+				input.getElementId(), 
+				input.getType(), 
+				input.getName(),
+				input.getActive(), 
+				input.getCreatedTimestamp(), 
+				input.getCreatedBy(), 
+				input.getLocation(),
 				marshElementAttribute(input.getElementAttribute()));
 	}
 

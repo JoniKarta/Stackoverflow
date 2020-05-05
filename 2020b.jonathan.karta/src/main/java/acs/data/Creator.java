@@ -1,11 +1,13 @@
 package acs.data;
 
+import javax.persistence.Embeddable;
+
+@Embeddable
 public class Creator {
 
 	private String userEmail;
 
 	public Creator() {
-		super();
 	}
 
 	public Creator(String userEmail) {
@@ -16,7 +18,7 @@ public class Creator {
 	public void setUserEmail(String userEmail) {
 		this.userEmail = userEmail;
 	}
-	
+
 	public String getUserEmail() {
 		return userEmail;
 	}

@@ -16,9 +16,6 @@ public class ActionServiceWithDB implements ActionService {
 	private ActionDao actionDao;
 	private ActionConverter actionConverter;
 
-	public ActionServiceWithDB() {
-	}
-
 	@Autowired
 	public void setActionDao(ActionDao actionDao) {
 		this.actionDao = actionDao;
@@ -35,7 +32,7 @@ public class ActionServiceWithDB implements ActionService {
 		String newId = UUID.randomUUID().toString();
 		ActionEntity entity = actionConverter.convertToEntity(action);
 		entity.setActionId(newId);
-		entity.setCreatedTimestamp(new Date());
+		entity.setCreation(new Date());
 		entity = actionDao.save(entity);
 		return actionConverter.convertFromEntity(entity);
 	}

@@ -38,7 +38,7 @@ public class ActionServiceMockup implements ActionService {
 		Long newId = nextId.getAndIncrement();
 		ActionEntity entity = actionConverter.convertToEntity(action);
 		entity.setActionId(newId.toString());
-		entity.setCreatedTimestamp(new Date());
+		entity.setCreation(new Date());
 		database.put(newId, entity);
 		return actionConverter.convertFromEntity(entity);
 	}

@@ -24,7 +24,7 @@ public class ActionConverter {
 
 	public Object convertFromEntity(ActionEntity action) {
 		return new ActionBoundary(action.getActionId(), action.getType(), action.getElement(),
-				action.getCreatedTimestamp(), action.getInvokedBy(),
+				action.getCreation(), action.getInvokedBy(),
 				unMarshActionAtrributes(action.getActionAttributes()));
 	}
 

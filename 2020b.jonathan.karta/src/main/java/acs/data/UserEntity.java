@@ -20,7 +20,8 @@ public class UserEntity {
 		this.userName = userName;
 		this.avatar = avatar;
 	}
-
+	
+	
 	public String getEmail() {
 		return email;
 	}

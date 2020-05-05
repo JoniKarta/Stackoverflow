@@ -1,20 +1,21 @@
 package acs.data;
 
+import javax.persistence.Embeddable;
+
+@Embeddable
 public class Location {
 	private double lat;
 	private double lng;
-	
+
 	public Location() {
 		// TODO Auto-generated constructor stub
 	}
 
-	
 	public Location(double lat, double lng) {
 		super();
 		this.lat = lat;
 		this.lng = lng;
 	}
-
 
 	public double getLat() {
 		return lat;
@@ -32,13 +33,9 @@ public class Location {
 		this.lng = lng;
 	}
 
-
 	@Override
 	public String toString() {
 		return "Location [lat=" + lat + ", lng=" + lng + "]";
 	}
 
-	
-
 }
-
