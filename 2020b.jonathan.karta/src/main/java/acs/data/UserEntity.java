@@ -2,6 +2,15 @@ package acs.data;
 
 import java.util.Date;
 
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+@Entity
+@Table(name="USERS")
 public class UserEntity {
 
 	private String email;
@@ -21,7 +30,7 @@ public class UserEntity {
 		this.avatar = avatar;
 	}
 	
-	
+	@Id
 	public String getEmail() {
 		return email;
 	}
@@ -29,7 +38,7 @@ public class UserEntity {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
+	@Embedded
 	public UserRoleEntity getRole() {
 		return role;
 	}
@@ -53,7 +62,7 @@ public class UserEntity {
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
 	}
-
+	@Temporal(TemporalType.TIMESTAMP)
 	public Date getCreation() {
 		return creation;
 	}
