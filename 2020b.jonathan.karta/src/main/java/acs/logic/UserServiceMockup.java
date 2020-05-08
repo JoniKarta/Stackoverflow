@@ -17,7 +17,7 @@ import acs.boundaries.UserRole;
 import acs.data.UserConverter;
 import acs.data.UserEntity;
 
-@Service
+//@Service
 public class UserServiceMockup implements UserService {
 	private Map<String, UserEntity> database;
 	private UserConverter userConverter;
