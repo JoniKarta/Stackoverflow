@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import acs.boundaries.ElementBoundary;
 import acs.dal.ElementDao;
+import acs.dal.LastIdValue;
+import acs.dal.LastValueDao;
 import acs.data.ElementEntity;
 import acs.data.Creator;
 import acs.data.ElementConverter;
@@ -21,12 +23,18 @@ import acs.data.ElementConverter;
 public class ElementServiceWithDB implements ElementService {
 	private ElementConverter entityCoverter;
 	private ElementDao elementDao;
-
+	private LastValueDao lastValueDao;
+	
 	@Autowired
 	public void setElementDao(ElementDao elementDao) {
 		this.elementDao = elementDao;
 	}
 
+	@Autowired
+	public void setLastValueDao(LastValueDao lastValueDao) {
+		this.lastValueDao = lastValueDao;
+	}
+	
 	@Autowired
 	public void setEntityCoverter(ElementConverter entityCoverter) {
 		this.entityCoverter = entityCoverter;
@@ -34,16 +42,19 @@ public class ElementServiceWithDB implements ElementService {
 
 	@Override
 	@Transactional
-	public ElementBoundary create(String managerEmail, ElementBoundary input) {
-		String newId = UUID.randomUUID().toString();
-		ElementEntity newElement = this.entityCoverter.convertToEntity(input);
-		newElement.setCreatedBy(new Creator(managerEmail));
-		newElement.setElementId(newId);
-		newElement.setCreatedTimestamp(new Date());
+	public ElementBoundary create(String managerEmail, ElementBoundary element) {
+		//String newId = UUID.randomUUID().toString();
+		LastIdValue elementId = this.lastValueDao.save(new LastIdValue());
+		ElementEntity newElementEntity = 
+				this.entityCoverter
+					.convertToEntity(element);
+		newElementEntity.setCreatedBy(new Creator(managerEmail));
+		newElementEntity.setElementId(elementId.getLastIdValue());
+		newElementEntity.setCreatedTimestamp(new Date());
 		
-		newElement = this.elementDao.save(newElement);
+		newElementEntity = this.elementDao.save(newElementEntity);
 		
-		return this.entityCoverter.convertFromEntity(newElement);
+		return this.entityCoverter.convertFromEntity(newElementEntity);
 	}
 
 	@Override
@@ -83,7 +94,8 @@ public class ElementServiceWithDB implements ElementService {
 	@Override
 	@Transactional(readOnly = true)
 	public ElementBoundary getSpecificElement(String userEmail, String elementId) {
-		Optional<ElementEntity> entity = this.elementDao.findById(elementId);
+		Optional<ElementEntity> entity = this.elementDao
+				.findById(this.entityCoverter.toEntityId(elementId));
 		
 		if (entity.isPresent()) {
 			return this.entityCoverter.convertFromEntity(entity.get());

@@ -15,7 +15,7 @@ import javax.persistence.TemporalType;
 @Table(name="ELEMENTS")
 public class ElementEntity {
 
-	private String elementId; // In the ElementBoundary it was String
+	private Long elementId; // In the ElementBoundary it was String
 	private String type;
 	private String name;
 	private Boolean active; 
@@ -27,7 +27,7 @@ public class ElementEntity {
 	public ElementEntity() {
 	}
 	
-	public ElementEntity(String elementId, String type, String name, boolean active, Date createdTimestamp,
+	public ElementEntity(Long elementId, String type, String name, boolean active, Date createdTimestamp,
 			Creator createdBy, Location location, String elementAttribute) {
 		super();
 		this.elementId = elementId;
@@ -41,11 +41,11 @@ public class ElementEntity {
 	}
 	
 	@Id
-	public String getElementId() {
+	public Long getElementId() {
 		return elementId;
 	}
 
-	public void setElementId(String elementId) {
+	public void setElementId(Long elementId) {
 		this.elementId = elementId;
 	}
 

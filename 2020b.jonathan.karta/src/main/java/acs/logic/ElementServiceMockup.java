@@ -43,7 +43,7 @@ public class ElementServiceMockup implements ElementService {
 		Long newId = nextId.getAndIncrement();
 		ElementEntity newElement = this.entityCoverter.convertToEntity(input);
 		newElement.setCreatedBy(new Creator(managerEmail));
-		newElement.setElementId(newId.toString());
+		newElement.setElementId(newId);
 		newElement.setCreatedTimestamp(new Date());
 		this.database.put(newId, newElement);
 		return this.entityCoverter.convertFromEntity(newElement);

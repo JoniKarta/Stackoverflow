@@ -21,7 +21,7 @@ public class ElementConverter {
 
 	public ElementBoundary convertFromEntity(ElementEntity entity) {
 		return new ElementBoundary(
-				entity.getElementId(),
+				this.fromEntityId(entity.getElementId()),
 				entity.getType(), 
 				entity.getName(),
 				entity.getActive(), 
@@ -33,7 +33,7 @@ public class ElementConverter {
 
 	public ElementEntity convertToEntity(ElementBoundary input) {
 		return new ElementEntity(
-				input.getElementId(), 
+				this.toEntityId(input.getElementId()), 
 				input.getType(), 
 				input.getName(),
 				input.getActive(), 
