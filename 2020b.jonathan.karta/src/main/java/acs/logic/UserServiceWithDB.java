@@ -28,16 +28,12 @@ public class UserServiceWithDB implements UserService {
 		this.userConverter = userConverter;
 	}
 
-//	@PostConstruct
-//	public void init() {
-//		this.database = Collections.synchronizedMap(new TreeMap<>());
-//	}
 
 	@Override
 	@Transactional
 	public UserBoundary createUser(UserBoundary user) {
 		UserEntity newUser = this.userConverter.toEntity(user);
-		newUser.setUserName(user.getUserName());
+		newUser.setUserName(user.getUsername());
 		newUser.setCreation(new Date());
 		newUser = this.userDao.save(newUser);
 
@@ -76,8 +72,8 @@ public class UserServiceWithDB implements UserService {
 			existing.setRole(update.getRole());
 		}
 
-		if (update.getUserName() != null) {
-			existing.setUserName(update.getUserName());
+		if (update.getUsername() != null) {
+			existing.setUserName(update.getUsername());
 		}
 		this.userDao.save(this.userConverter.toEntity(existing));
 
