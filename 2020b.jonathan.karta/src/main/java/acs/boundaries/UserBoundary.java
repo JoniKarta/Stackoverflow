@@ -3,18 +3,18 @@ package acs.boundaries;
 public class UserBoundary {
 	private String email;
 	private UserRole role;
-	private String userName;
+	private String username;
 	private String avatar;
 
 	public UserBoundary() {
 
 	}
 
-	public UserBoundary(String email, UserRole role, String userName, String avatar) {
+	public UserBoundary(String email, UserRole role, String username, String avatar) {
 		super();
 		this.email = email;
 		this.role = role;
-		this.userName = userName;
+		this.username = username;
 		this.avatar = avatar;
 	}
 
@@ -34,12 +34,12 @@ public class UserBoundary {
 		this.role = role;
 	}
 
-	public String getUserName() {
-		return userName;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setUserName(String username) {
+		this.username = username;
 	}
 
 	public String getAvatar() {
@@ -52,7 +52,7 @@ public class UserBoundary {
 
 	@Override
 	public String toString() {
-		return "UserBoundary [email=" + email + ", role=" + role + ", avatar=" + avatar + "]";
+		return "UserBoundary [email=" + email + ", role=" + role + ", username=" + username + ", avatar=" + avatar
+				+ "]";
 	}
-
 }
