@@ -34,7 +34,7 @@ public class UserConverter {
 			return new UserEntity(
 				user.getEmail(),
 				user.getRole() != null ? UserRoleEntity.valueOf(user.getRole().name().toLowerCase()) : null,
-				user.getUserName(),
+				user.getUsername(),
 				user.getAvatar().toString());
 		} catch (Exception e) {
 			throw new RuntimeException("could not convert UserBoundary to UserEntity! "+user.toString());

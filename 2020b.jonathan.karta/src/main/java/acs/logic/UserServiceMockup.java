@@ -71,15 +71,16 @@ public class UserServiceMockup implements UserService {
 		 */
 
 		if (update.getRole() != null
-				&& update.getRole() == UserRole.ADMIN
-				&& update.getRole() == UserRole.PLAYER
-				&& update.getRole() == UserRole.MANAGER) {
+				&& (update.getRole().toString().equalsIgnoreCase(UserRole.ADMIN.toString())
+				|| update.getRole().toString().equalsIgnoreCase(UserRole.PLAYER.toString())
+				|| update.getRole().toString().equalsIgnoreCase(UserRole.MANAGER.toString()))) {
 			userB.setRole(update.getRole());
 			dirty = true;
 		}
 
-		if (update.getUserName() != null) {
-			userB.setUserName(update.getUserName());
+
+		if (update.getUsername() != null) {
+			userB.setUserName(update.getUsername());
 			dirty = true;
 		}
 
