@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import acs.boundaries.ElementBoundary;
+import acs.dal.ElementDao;
 import acs.data.ElementEntity;
 import acs.data.Creator;
 import acs.data.ElementConverter;
@@ -33,12 +34,12 @@ public class ElementServiceWithDB implements ElementService {
 
 	@Override
 	@Transactional
-	public ElementBoundary createNewElement(String managerEmail, ElementBoundary input) {
+	public ElementBoundary create(String managerEmail, ElementBoundary input) {
 		String newId = UUID.randomUUID().toString();
 		ElementEntity newElement = this.entityCoverter.convertToEntity(input);
 		newElement.setCreatedBy(new Creator(managerEmail));
 		newElement.setElementId(newId);
-		newElement.setCreation(new Date());
+		newElement.setCreatedTimestamp(new Date());
 		
 		newElement = this.elementDao.save(newElement);
 		
@@ -47,7 +48,7 @@ public class ElementServiceWithDB implements ElementService {
 
 	@Override
 	@Transactional
-	public ElementBoundary updateElement(String managerEmail, String elementId, ElementBoundary update) {
+	public ElementBoundary update(String managerEmail, String elementId, ElementBoundary update) {
 		ElementBoundary existing = this.getSpecificElement(managerEmail, elementId);
 		// Note there are 2 attributes that not gets updated (elemendId,Date)
 		if (update.getType() != null) {
@@ -94,7 +95,7 @@ public class ElementServiceWithDB implements ElementService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<ElementBoundary> getAllElements(String userEmail) {
+	public List<ElementBoundary> getAll(String userEmail) {
 	
 		List<ElementBoundary> rv = new ArrayList<>();
 		

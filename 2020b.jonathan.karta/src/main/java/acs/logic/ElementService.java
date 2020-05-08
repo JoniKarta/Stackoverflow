@@ -6,13 +6,13 @@ import acs.boundaries.ElementBoundary;
 
 public interface ElementService {
 
-	public ElementBoundary createNewElement(String managerEmail, ElementBoundary input);
+	public ElementBoundary create(String managerEmail, ElementBoundary element);
 
-	public ElementBoundary updateElement(String managerEmail, String elementId, ElementBoundary update);
+	public ElementBoundary update(String managerEmail, String elementId, ElementBoundary update);
+
+	public List<ElementBoundary> getAll(String userEmail);
 
 	public ElementBoundary getSpecificElement(String userEmail, String elementId);
-
-	public List<ElementBoundary> getAllElements(String userEmail);
 
 	public void deleteAllElements(String adminEmail);
 }

@@ -26,10 +26,10 @@ public class ElementConverter {
 				entity.getName(),
 				entity.getActive(), 
 				entity.getLocation(), 
-				entity.getCreation(), 
+				entity.getCreatedTimestamp(), 
 				entity.getCreatedBy(),
 				unMarshElementAttribute(entity.getElementAttribute()));
-	}
+	} 
 
 	public ElementEntity convertToEntity(ElementBoundary input) {
 		return new ElementEntity(

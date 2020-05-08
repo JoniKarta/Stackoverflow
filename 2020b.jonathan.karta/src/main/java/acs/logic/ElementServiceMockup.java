@@ -39,18 +39,18 @@ public class ElementServiceMockup implements ElementService {
 	}
 
 	@Override
-	public ElementBoundary createNewElement(String managerEmail, ElementBoundary input) {
+	public ElementBoundary create(String managerEmail, ElementBoundary input) {
 		Long newId = nextId.getAndIncrement();
 		ElementEntity newElement = this.entityCoverter.convertToEntity(input);
 		newElement.setCreatedBy(new Creator(managerEmail));
 		newElement.setElementId(newId.toString());
-		newElement.setCreation(new Date());
+		newElement.setCreatedTimestamp(new Date());
 		this.database.put(newId, newElement);
 		return this.entityCoverter.convertFromEntity(newElement);
 	}
 
 	@Override
-	public ElementBoundary updateElement(String managerEmail, String elementId, ElementBoundary update) {
+	public ElementBoundary update(String managerEmail, String elementId, ElementBoundary update) {
 		ElementBoundary existing = this.getSpecificElement(managerEmail, elementId);
 		// Note there are 2 attributes that not gets updated (elemendId,Date)
 		boolean dirty = false;
@@ -98,7 +98,7 @@ public class ElementServiceMockup implements ElementService {
 	}
 
 	@Override
-	public List<ElementBoundary> getAllElements(String userEmail) {
+	public List<ElementBoundary> getAll(String userEmail) {
 		return this.database.values().stream().map(entity -> this.entityCoverter.convertFromEntity(entity))
 				.collect(Collectors.toList());
 	}

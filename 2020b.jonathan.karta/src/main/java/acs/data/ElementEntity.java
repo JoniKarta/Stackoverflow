@@ -18,9 +18,8 @@ public class ElementEntity {
 	private String elementId; // In the ElementBoundary it was String
 	private String type;
 	private String name;
-	//TODO ask the team is it's should be Double or double
 	private Boolean active; 
-	private Date creation;
+	private Date createdTimestamp;
 	private Creator createdBy;
 	private Location location;
 	private String elementAttribute; // In the ElementBoundary it was map
@@ -35,7 +34,7 @@ public class ElementEntity {
 		this.type = type;
 		this.name = name;
 		this.active = active;
-		this.creation = createdTimestamp;
+		this.createdTimestamp = createdTimestamp;
 		this.createdBy = createdBy;
 		this.location = location;
 		this.elementAttribute = elementAttribute;
@@ -75,12 +74,12 @@ public class ElementEntity {
 	}
 	
 	@Temporal(TemporalType.TIMESTAMP)
-	public Date getCreation() {
-		return creation;
+	public Date getCreatedTimestamp() {
+		return createdTimestamp;
 	}
-
-	public void setCreation(Date createdTimestamp) {
-		this.creation = createdTimestamp;
+	
+	public void setCreatedTimestamp(Date createdTimestamp) {
+		this.createdTimestamp = createdTimestamp;
 	}
 	
 	@Embedded
