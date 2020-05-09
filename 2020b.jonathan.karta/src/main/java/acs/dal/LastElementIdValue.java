@@ -2,19 +2,19 @@ package acs.dal;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class LastIdValue {
+public class LastElementIdValue {
 
 	private Long lastIdValue;
 	
-	public LastIdValue() {
-		// TODO Auto-generated constructor stub
+	public LastElementIdValue() {
 	}
 	
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long getLastIdValue() {
 		return lastIdValue;
 	}
@@ -22,6 +22,4 @@ public class LastIdValue {
 	public void setLastIdValue(Long lastIdValue) {
 		this.lastIdValue = lastIdValue;
 	}
-	
-
 }

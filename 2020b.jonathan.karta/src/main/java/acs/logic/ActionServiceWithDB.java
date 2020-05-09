@@ -3,13 +3,15 @@ package acs.logic;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import acs.boundaries.ActionBoundary;
 import acs.dal.ActionDao;
-import acs.dal.LastIdValue;
-import acs.dal.LastValueDao;
+import acs.dal.LastActionIdValue;
+import acs.dal.LastActionValueDao;
 import acs.data.ActionConverter;
 import acs.data.ActionEntity;
 import acs.validations.InvalidActionElement;
@@ -21,7 +23,7 @@ import acs.validations.Validator;
 public class ActionServiceWithDB implements ActionService {
 	private ActionDao actionDao;
 	private ActionConverter actionConverter;
-	private LastValueDao lastValueDao;
+	private LastActionValueDao lastValueDao;
 	private Validator validator;
 	
 	@Autowired
@@ -40,7 +42,7 @@ public class ActionServiceWithDB implements ActionService {
 	}
 
 	@Autowired
-	public void setLastValueDao(LastValueDao lastValueDao) {
+	public void setLastValueDao(LastActionValueDao lastValueDao) {
 		this.lastValueDao = lastValueDao;
 	}
 
@@ -59,7 +61,7 @@ public class ActionServiceWithDB implements ActionService {
 			throw new InvalidActionType("Invalid action type");
 		}
 		
-		LastIdValue idValue = lastValueDao.save(new LastIdValue());
+		LastActionIdValue idValue = lastValueDao.save(new LastActionIdValue());
 		ActionEntity entity = actionConverter.convertToEntity(action);
 		entity.setActionId(idValue.getLastIdValue());
 		entity.setCreation(new Date());

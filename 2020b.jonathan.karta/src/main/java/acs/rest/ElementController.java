@@ -22,13 +22,18 @@ public class ElementController {
 		this.elementService = elementService;
 	}
 
-	@RequestMapping(path = "/acs/elements/{managerEmail}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(path = "/acs/elements/{managerEmail}",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ElementBoundary createElementBoundary(@RequestBody ElementBoundary input,
 			@PathVariable("managerEmail") String managerEmail) {
 		return this.elementService.create(managerEmail, input);
 	}
 
-	@RequestMapping(path = "/acs/elements/{managerEmail}/{elementId}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(path = "/acs/elements/{managerEmail}/{elementId}",
+			method = RequestMethod.PUT,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void updateElement(@PathVariable("managerEmail") String managerEmail,
 			@PathVariable("elementId") String elementId, @RequestBody ElementBoundary update) {
 		this.elementService.update(managerEmail, elementId, update);
@@ -53,14 +58,16 @@ public class ElementController {
 			method = RequestMethod.PUT,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void addChildToParent(@PathVariable("managerEmail") String managerEmail,
-			@PathVariable("parentElementId") String parentElementId, @RequestBody ElementIdBoundary elementIdBoundary) {
+			@PathVariable("parentElementId") String parentElementId,
+			@RequestBody ElementIdBoundary elementIdBoundary) {
 		this.elementService.bindChildToParent(managerEmail, parentElementId, elementIdBoundary);
 	}
 	
 	@RequestMapping(path = "/acs/elements/{userEmail}/{parentElementId}/children",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ElementBoundary[] getAllElementChildren(@PathVariable("userEmail") String userEmail,
+	public ElementBoundary[] getAllElementChildren(
+			@PathVariable("userEmail") String userEmail,
 			@PathVariable("parentElementId") String parentElementId) {
 		return this.elementService.getAllElementChildrens(userEmail, parentElementId).toArray(new ElementBoundary[0]);
 	}

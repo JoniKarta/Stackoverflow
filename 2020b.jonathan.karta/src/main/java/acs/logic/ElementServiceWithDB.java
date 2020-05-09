@@ -16,8 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import acs.boundaries.ElementBoundary;
 import acs.boundaries.ElementIdBoundary;
 import acs.dal.ElementDao;
-import acs.dal.LastIdValue;
-import acs.dal.LastValueDao;
+import acs.dal.LastElementIdValue;
+import acs.dal.LastElementValueDao;
 import acs.data.Creator;
 import acs.data.ElementConverter;
 import acs.data.ElementEntity;
@@ -30,7 +30,7 @@ import acs.validations.Validator;
 public class ElementServiceWithDB implements EnhancedElementService {
 	private ElementConverter entityConverter;
 	private ElementDao elementDao;
-	private LastValueDao lastValueDao;
+	private LastElementValueDao lastValueDao;
 	private Validator validator;
 
 	@Autowired
@@ -44,7 +44,7 @@ public class ElementServiceWithDB implements EnhancedElementService {
 	}
 
 	@Autowired
-	public void setLastValueDao(LastValueDao lastValueDao) {
+	public void setLastValueDao(LastElementValueDao lastValueDao) {
 		this.lastValueDao = lastValueDao;
 	}
 
@@ -69,7 +69,7 @@ public class ElementServiceWithDB implements EnhancedElementService {
 			throw new InvalidElementType("Invalid element type");
 		}
 		
-		LastIdValue elementId = this.lastValueDao.save(new LastIdValue());
+		LastElementIdValue elementId = this.lastValueDao.save(new LastElementIdValue());
 		ElementEntity newElementEntity = this.entityConverter.convertToEntity(element);
 		newElementEntity.setCreatedBy(new Creator(managerEmail));
 		newElementEntity.setElementId(elementId.getLastIdValue());
