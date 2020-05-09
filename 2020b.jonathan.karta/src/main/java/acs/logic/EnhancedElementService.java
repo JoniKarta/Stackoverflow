@@ -1,5 +1,6 @@
 package acs.logic;
 
+import java.util.Collection;
 import java.util.Set;
 
 import acs.boundaries.ElementBoundary;
@@ -9,8 +10,8 @@ public interface EnhancedElementService extends ElementService{
 	
 	public void bindElements(String managerEmail, String parentElementId, ElementIdBoundary input);
 	
-	public Set<ElementBoundary> getAllChildrens(String userEmail, String parentElementId);
+	public Set<ElementBoundary> getAllElementChildrens(String userEmail, String parentElementId);
 	
-	public Set<ElementBoundary> getAllParents(String userEmail, String childElementId);
+	public Collection<ElementBoundary> getAllElementParents(String userEmail, String childElementId);
 
 }

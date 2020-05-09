@@ -52,5 +52,17 @@ public class ElementController {
 		this.elementService.bindElements(managerEmail, parentElementId, elementIdBoundary);
 	}
 	
+	@RequestMapping(path = "/acs/elements/{userEmail}/{parentElementId}/children", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ElementBoundary[] getAllElementChildren(@PathVariable("userEmail") String userEmail,
+			@PathVariable("parentElementId") String parentElementId) {
+		return this.elementService.getAllElementChildrens(userEmail, parentElementId).toArray(new ElementBoundary[0]);
+	}
+	
+	@RequestMapping(path = "/acs/elements/{userEmail}/{childElementId}/parents")
+	public ElementBoundary[] getAllElementParents(@PathVariable("userEmail") String userEmail,
+			@PathVariable("childElementId") String childElementId){
+		return this.elementService.getAllElementParents(userEmail, childElementId).toArray(new ElementBoundary[0]);
+
+	}
 
 }
