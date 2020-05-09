@@ -1,11 +1,15 @@
 package acs.boundaries;
 
+import acs.logic.ExtendedEmailAnno;
+
 public class UserBoundary {
+	
+	@ExtendedEmailAnno
 	private String email;
 	private UserRole role;
 	private String username;
 	private String avatar;
-
+	
 	public UserBoundary() {
 
 	}

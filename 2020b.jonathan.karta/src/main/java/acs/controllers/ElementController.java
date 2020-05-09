@@ -35,34 +35,43 @@ public class ElementController {
 		this.elementService.update(managerEmail, elementId, update);
 	}
 
-	@RequestMapping(path = "/acs/elements/{userEmail}/{elementId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(path = "/acs/elements/{userEmail}/{elementId}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ElementBoundary getElementBoundary(@PathVariable("userEmail") String userEmail,
 			@PathVariable("elementId") String elementId) {
 		return this.elementService.getSpecificElement(userEmail, elementId);
 	}
 
-	@RequestMapping(path = "/acs/elements/{userEmail}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(path = "/acs/elements/{userEmail}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ElementBoundary[] getAllElements(@PathVariable("userEmail") String userEmail) {
 		return this.elementService.getAll(userEmail).toArray(new ElementBoundary[0]);
 	}
 
-	@RequestMapping(path = "/acs/elements/{managerEmail}/{parentElementId}/children", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(path = "/acs/elements/{managerEmail}/{parentElementId}/children",
+			method = RequestMethod.PUT,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void addChildToParent(@PathVariable("managerEmail") String managerEmail,
 			@PathVariable("parentElementId") String parentElementId, @RequestBody ElementIdBoundary elementIdBoundary) {
-		this.elementService.bindElements(managerEmail, parentElementId, elementIdBoundary);
+		this.elementService.bindChildToParent(managerEmail, parentElementId, elementIdBoundary);
 	}
 	
-	@RequestMapping(path = "/acs/elements/{userEmail}/{parentElementId}/children", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(path = "/acs/elements/{userEmail}/{parentElementId}/children",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ElementBoundary[] getAllElementChildren(@PathVariable("userEmail") String userEmail,
 			@PathVariable("parentElementId") String parentElementId) {
 		return this.elementService.getAllElementChildrens(userEmail, parentElementId).toArray(new ElementBoundary[0]);
 	}
 	
-	@RequestMapping(path = "/acs/elements/{userEmail}/{childElementId}/parents")
-	public ElementBoundary[] getAllElementParents(@PathVariable("userEmail") String userEmail,
+	@RequestMapping(path = "/acs/elements/{userEmail}/{childElementId}/parents",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ElementBoundary[] getAllElementParents(
+			@PathVariable("userEmail") String userEmail,
 			@PathVariable("childElementId") String childElementId){
 		return this.elementService.getAllElementParents(userEmail, childElementId).toArray(new ElementBoundary[0]);
-
 	}
-
 }

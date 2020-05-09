@@ -31,5 +31,4 @@ public class Invoker {
 	public String toString() {
 		return "Invoker [email=" + email + "]";
 	}
-	
 }

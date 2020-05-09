@@ -8,7 +8,7 @@ import acs.boundaries.ElementIdBoundary;
 
 public interface EnhancedElementService extends ElementService{
 	
-	public void bindElements(String managerEmail, String parentElementId, ElementIdBoundary input);
+	public void bindChildToParent(String managerEmail, String parentElementId, ElementIdBoundary input);
 	
 	public Set<ElementBoundary> getAllElementChildrens(String userEmail, String parentElementId);
 	

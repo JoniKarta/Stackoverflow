@@ -28,12 +28,11 @@ public class UserServiceWithDB implements UserService {
 		this.userConverter = userConverter;
 	}
 
-
 	@Override
 	@Transactional
 	public UserBoundary createUser(UserBoundary user) {
+		//checkFields()
 		UserEntity newUser = this.userConverter.toEntity(user);
-		newUser.setUserName(user.getUsername());
 		newUser.setCreation(new Date());
 		newUser = this.userDao.save(newUser);
 

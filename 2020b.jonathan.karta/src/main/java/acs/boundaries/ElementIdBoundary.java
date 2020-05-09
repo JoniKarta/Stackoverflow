@@ -15,6 +15,4 @@ public class ElementIdBoundary {
 	public void setId(String id) {
 		this.id = id;
 	}
-	
-	
 }

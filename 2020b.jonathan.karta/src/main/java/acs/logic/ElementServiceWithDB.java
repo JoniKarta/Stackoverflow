@@ -29,6 +29,9 @@ public class ElementServiceWithDB implements EnhancedElementService {
 	private ElementDao elementDao;
 	private LastValueDao lastValueDao;
 
+	public ElementServiceWithDB() {
+	}
+	
 	@Autowired
 	public void setElementDao(ElementDao elementDao) {
 		this.elementDao = elementDao;
@@ -47,19 +50,14 @@ public class ElementServiceWithDB implements EnhancedElementService {
 	@Override
 	@Transactional
 	public ElementBoundary create(String managerEmail, ElementBoundary element) {
-		// String newId = UUID.randomUUID().toString();
-
-		// Create new tupple in LastIdValue table with a non-used id
 		LastIdValue elementId = this.lastValueDao.save(new LastIdValue());
 		ElementEntity newElementEntity = this.entityConverter.convertToEntity(element);
 		newElementEntity.setCreatedBy(new Creator(managerEmail));
 		newElementEntity.setElementId(elementId.getLastIdValue());
 		newElementEntity.setCreatedTimestamp(new Date());
 
-		// Delete the tupple from the LastIdValue table
 		this.lastValueDao.delete(elementId);
 		newElementEntity = this.elementDao.save(newElementEntity);
-
 		return this.entityConverter.convertFromEntity(newElementEntity);
 	}
 
@@ -67,18 +65,13 @@ public class ElementServiceWithDB implements EnhancedElementService {
 	@Transactional
 	public ElementBoundary update(String managerEmail, String elementId, ElementBoundary update) {
 		ElementBoundary existing = this.getSpecificElement(managerEmail, elementId);
-		// Note there are 2 attributes that not gets updated (elemendId,Date)
+		// Note there are 3 attributes that not gets updated (elemendId,Date, Creator)
 		if (update.getType() != null) {
 			existing.setType(update.getType());
 		}
 
 		if (update.getName() != null) {
 			existing.setName(update.getName());
-		}
-
-		if (update.getCreatedBy() != null
-				&& update.getCreatedBy().getUserEmail() != existing.getCreatedBy().getUserEmail()) {
-			existing.getCreatedBy().setUserEmail((update.getCreatedBy().getUserEmail()));
 		}
 
 		if (update.getActive() != null && update.getActive() != existing.getActive()) {
@@ -132,7 +125,7 @@ public class ElementServiceWithDB implements EnhancedElementService {
 
 	@Override
 	@Transactional
-	public void bindElements(String managerEmail, String parentElementId, ElementIdBoundary input) {
+	public void bindChildToParent(String managerEmail, String parentElementId, ElementIdBoundary input) {
 		ElementEntity parent = this.elementDao.findById(this.entityConverter.toEntityId(parentElementId))
 				.orElseThrow(() -> new ElementNotFoundException("Could not find element for id: " + parentElementId));
 

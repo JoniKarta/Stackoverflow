@@ -22,7 +22,10 @@ public class ActionController {
 		this.actionService = actionService;
 	}
 
-	@RequestMapping(path = "/acs/actions", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(path = "/acs/actions",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public Object invokeAction(@RequestBody ActionBoundary input) {
 		input.setCreatedTimestamp(new Date());
 		return actionService.invokeAction(input);

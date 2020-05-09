@@ -139,4 +139,13 @@ public class ElementEntity {
 		this.childrens.add(child);
 		child.setParent(this);
 	}
+
+	@Override
+	public String toString() {
+		return "ElementEntity [elementId=" + elementId + ", type=" + type + ", name=" + name + ", active=" + active
+				+ ", createdTimestamp=" + createdTimestamp + ", createdBy=" + createdBy + ", location=" + location
+				+ ", elementAttribute=" + elementAttribute + ", parent=" + parent + ", childrens=" + childrens + "]";
+	}
+	
 }
+

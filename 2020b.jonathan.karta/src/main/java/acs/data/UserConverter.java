@@ -33,7 +33,7 @@ public class UserConverter {
 		try {
 			return new UserEntity(
 				user.getEmail(),
-				user.getRole() != null ? UserRoleEntity.valueOf(user.getRole().name().toLowerCase()) : null,
+				user.getRole() != null ? UserRoleEntity.valueOf(user.getRole().name().toUpperCase()) : null,
 				user.getUsername(),
 				user.getAvatar().toString());
 		} catch (Exception e) {

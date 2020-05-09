@@ -32,7 +32,6 @@ public class ActionConverter {
 		Map<String, Object> actionUnMarshaling;
 		try {
 			actionUnMarshaling = jackson.readValue(actionAttributes, Map.class);
-
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

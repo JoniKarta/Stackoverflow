@@ -17,6 +17,10 @@ public class ActionServiceWithDB implements ActionService {
 	private ActionDao actionDao;
 	private ActionConverter actionConverter;
 
+	public ActionServiceWithDB() {
+		// TODO Auto-generated constructor stub
+	}
+	
 	@Autowired
 	public void setActionDao(ActionDao actionDao) {
 		this.actionDao = actionDao;
@@ -43,13 +47,11 @@ public class ActionServiceWithDB implements ActionService {
 	public List<ActionBoundary> getAllActions(String adminEmail) {
 		List<ActionBoundary> rv = new ArrayList<>();
 
-		Iterable<ActionEntity> entityList = actionDao.findAll();
+		Iterable<ActionEntity> entityList = this.actionDao.findAll();
 		for (ActionEntity actionEntity : entityList) {
-			rv.add((ActionBoundary) actionConverter.convertFromEntity(actionEntity));
+			rv.add((ActionBoundary) this.actionConverter.convertFromEntity(actionEntity));
 		}
-
 		return rv;
-
 	}
 
 	@Override

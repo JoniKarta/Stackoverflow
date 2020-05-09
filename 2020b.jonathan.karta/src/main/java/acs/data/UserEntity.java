@@ -4,6 +4,8 @@ import java.util.Date;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -38,7 +40,8 @@ public class UserEntity {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	@Embedded
+	
+	@Enumerated(EnumType.STRING)
 	public UserRoleEntity getRole() {
 		return role;
 	}
