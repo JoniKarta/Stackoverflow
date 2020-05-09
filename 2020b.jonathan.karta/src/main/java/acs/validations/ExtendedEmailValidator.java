@@ -1,9 +1,7 @@
-package validations;
+package acs.validations;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-
-import acs.logic.ExtendedEmailAnno;
 
 public class ExtendedEmailValidator implements ConstraintValidator<ExtendedEmailAnno, String>{
 
@@ -18,7 +16,7 @@ public class ExtendedEmailValidator implements ConstraintValidator<ExtendedEmail
 		if(emailField != null && emailField.matches(".+@.+\\..+")){
 			return true;
 		}else {
-			throw new RuntimeException("Wrong mail");
+			throw new RuntimeException();
 		}
 		//return emailField != null && emailField.matches(".+@.+\\..+");
 	}

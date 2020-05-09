@@ -61,14 +61,13 @@ public class UserServiceWithDB implements UserService {
 			existing.setAvatar(update.getAvatar());
 		}
 
-		/** Unchangeable - email is the current DB key */
-		/*
-		 * if (update.getEmail() != null) { dirty = true; }
-		 */
-
-		if (update.getRole() != null && update.getRole() == UserRole.ADMIN && update.getRole() == UserRole.PLAYER
-				&& update.getRole() == UserRole.MANAGER) {
+		if (update.getRole() != null
+				&& update.getRole() == UserRole.ADMIN
+				|| update.getRole() == UserRole.PLAYER
+				|| update.getRole() == UserRole.MANAGER) {
 			existing.setRole(update.getRole());
+		} else {
+			throw new RoleNotFoundException("Role does not exist");
 		}
 
 		if (update.getUsername() != null) {

@@ -1,17 +1,19 @@
 package acs.boundaries;
 
-import acs.logic.ExtendedEmailAnno;
+import acs.validations.CheckRoleAnno;
+import acs.validations.ExtendedEmailAnno;
 
 public class UserBoundary {
 	
 	@ExtendedEmailAnno
 	private String email;
+	
+	@CheckRoleAnno(regexp = "ADMIN|PLAYER|MANAGER")
 	private UserRole role;
 	private String username;
 	private String avatar;
 	
 	public UserBoundary() {
-
 	}
 
 	public UserBoundary(String email, UserRole role, String username, String avatar) {

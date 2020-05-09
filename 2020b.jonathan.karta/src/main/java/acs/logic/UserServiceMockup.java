@@ -64,16 +64,11 @@ public class UserServiceMockup implements UserService {
 			userB.setAvatar(update.getAvatar());
 			dirty = true;
 		}
-
-		/** Unchangeable - email is the current DB key */
-		/*
-		 * if (update.getEmail() != null) { dirty = true; }
-		 */
-
+		
 		if (update.getRole() != null
-				&& (update.getRole().toString().equalsIgnoreCase(UserRole.ADMIN.toString())
-				|| update.getRole().toString().equalsIgnoreCase(UserRole.PLAYER.toString())
-				|| update.getRole().toString().equalsIgnoreCase(UserRole.MANAGER.toString()))) {
+				&& update.getRole() == UserRole.ADMIN
+				|| update.getRole() == UserRole.PLAYER
+				|| update.getRole() == UserRole.MANAGER) {
 			userB.setRole(update.getRole());
 			dirty = true;
 		}

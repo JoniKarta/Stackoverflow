@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +33,7 @@ public class UserController {
 		return this.userService.login(userEmail);
 	}
 
+	@ExceptionHandler
 	@RequestMapping(path = "/acs/users", method = RequestMethod.POST,
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -42,7 +44,8 @@ public class UserController {
 	@RequestMapping(path = "/acs/users/{userEmail}",
 			method = RequestMethod.PUT,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public UserBoundary updateUser(@RequestBody UserBoundary input, @PathVariable("userEmail") String userEmail) {
+	public UserBoundary updateUser(@RequestBody UserBoundary input,
+			@PathVariable("userEmail") String userEmail) {
 		return this.userService.updateUser(userEmail, input);
 	}
 
