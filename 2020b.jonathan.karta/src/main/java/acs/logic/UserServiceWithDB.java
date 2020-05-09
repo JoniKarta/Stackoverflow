@@ -4,23 +4,32 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import acs.boundaries.UserBoundary;
-import acs.boundaries.UserRole;
 import acs.dal.UserDao;
 import acs.data.UserConverter;
 import acs.data.UserEntity;
+import acs.validations.ElementNotFoundException;
+import acs.validations.InvalidAvatarException;
+import acs.validations.InvalidEmailFormatException;
+import acs.validations.InvalidUsernameException;
+import acs.validations.RoleNotFoundException;
+import acs.validations.Validator;
 
 @Service
 public class UserServiceWithDB implements UserService {
 	private UserDao userDao;
 	private UserConverter userConverter;
+	private Validator validator;
 
 	@Autowired
-	public UserServiceWithDB(UserDao userDao) {
+	public UserServiceWithDB(UserDao userDao, Validator validator) {
 		this.userDao = userDao;
+		this.validator = validator;
 	}
 
 	@Autowired
@@ -31,7 +40,22 @@ public class UserServiceWithDB implements UserService {
 	@Override
 	@Transactional
 	public UserBoundary createUser(UserBoundary user) {
-		//checkFields()
+		if(!this.validator.isRoleExist(user)) {
+			throw new RoleNotFoundException("Invalid role");
+		}
+		
+		if(!this.validator.validateUserEmail(user.getEmail())) {
+			throw new InvalidEmailFormatException("Invalid email");
+		}
+		
+		if(!this.validator.validateUsername(user)) {
+			throw new InvalidUsernameException("Invalid username");
+		}
+		
+		if(!this.validator.validateAvatar(user)) {
+			throw new InvalidAvatarException("Invalid avatar");
+		}
+		
 		UserEntity newUser = this.userConverter.toEntity(user);
 		newUser.setCreation(new Date());
 		newUser = this.userDao.save(newUser);
@@ -54,23 +78,17 @@ public class UserServiceWithDB implements UserService {
 	@Override
 	@Transactional
 	public UserBoundary updateUser(String userEmail, UserBoundary update) {
-		// UserBoundary userB = this.login(userEmail);
 		UserBoundary existing = this.login(userEmail);
 
-		if (update.getAvatar() != null) {
+		if (this.validator.validateAvatar(update)) {
 			existing.setAvatar(update.getAvatar());
 		}
 
-		if (update.getRole() != null
-				&& update.getRole() == UserRole.ADMIN
-				|| update.getRole() == UserRole.PLAYER
-				|| update.getRole() == UserRole.MANAGER) {
+		if (this.validator.isRoleExist(update)) {
 			existing.setRole(update.getRole());
-		} else {
-			throw new RoleNotFoundException("Role does not exist");
 		}
 
-		if (update.getUsername() != null) {
+		if (this.validator.validateUsername(update)) {
 			existing.setUserName(update.getUsername());
 		}
 		this.userDao.save(this.userConverter.toEntity(existing));

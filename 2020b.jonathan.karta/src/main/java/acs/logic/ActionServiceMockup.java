@@ -37,7 +37,7 @@ public class ActionServiceMockup implements ActionService {
 	public Object invokeAction(ActionBoundary action) {
 		Long newId = nextId.getAndIncrement();
 		ActionEntity entity = actionConverter.convertToEntity(action);
-		entity.setActionId(newId.toString());
+		entity.setActionId(Long.parseLong(newId.toString()));
 		entity.setCreation(new Date());
 		database.put(newId, entity);
 		return actionConverter.convertFromEntity(entity);

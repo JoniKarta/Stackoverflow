@@ -3,24 +3,32 @@ package acs.logic;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import acs.boundaries.ActionBoundary;
 import acs.dal.ActionDao;
+import acs.dal.LastIdValue;
+import acs.dal.LastValueDao;
 import acs.data.ActionConverter;
 import acs.data.ActionEntity;
+import acs.validations.InvalidActionElement;
+import acs.validations.InvalidActionInvoker;
+import acs.validations.InvalidActionType;
+import acs.validations.Validator;
 
 @Service
 public class ActionServiceWithDB implements ActionService {
 	private ActionDao actionDao;
 	private ActionConverter actionConverter;
-
-	public ActionServiceWithDB() {
-		// TODO Auto-generated constructor stub
-	}
+	private LastValueDao lastValueDao;
+	private Validator validator;
 	
+	@Autowired
+	public ActionServiceWithDB(Validator validator) {
+		this.validator = validator;
+	}
+
 	@Autowired
 	public void setActionDao(ActionDao actionDao) {
 		this.actionDao = actionDao;
@@ -31,13 +39,31 @@ public class ActionServiceWithDB implements ActionService {
 		this.actionConverter = actionConverter;
 	}
 
+	@Autowired
+	public void setLastValueDao(LastValueDao lastValueDao) {
+		this.lastValueDao = lastValueDao;
+	}
+
 	@Override
 	@Transactional
 	public Object invokeAction(ActionBoundary action) {
-		String newId = UUID.randomUUID().toString();
+		if(!this.validator.validateActionElement(action)) {
+			throw new InvalidActionElement("Action done on invalid element");
+		}
+		
+		if(!this.validator.validateActionInvoker(action)) {
+			throw new InvalidActionInvoker("Invalid action invoker");
+		}
+		
+		if(!this.validator.validateActionType(action)) {
+			throw new InvalidActionType("Invalid action type");
+		}
+		
+		LastIdValue idValue = lastValueDao.save(new LastIdValue());
 		ActionEntity entity = actionConverter.convertToEntity(action);
-		entity.setActionId(newId);
+		entity.setActionId(idValue.getLastIdValue());
 		entity.setCreation(new Date());
+		lastValueDao.delete(idValue);
 		entity = actionDao.save(entity);
 		return actionConverter.convertFromEntity(entity);
 	}

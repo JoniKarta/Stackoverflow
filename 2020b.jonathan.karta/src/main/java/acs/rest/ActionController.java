@@ -1,4 +1,4 @@
-package acs.controllers;
+package acs.rest;
 
 import java.util.Date;
 

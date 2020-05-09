@@ -1,4 +1,4 @@
-package acs.controllers;
+package acs.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import acs.boundaries.ElementBoundary;
 import acs.boundaries.ElementIdBoundary;
-import acs.logic.ElementService;
 import acs.logic.EnhancedElementService;
 
 @RestController

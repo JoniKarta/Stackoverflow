@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,17 +18,24 @@ import acs.boundaries.ElementIdBoundary;
 import acs.dal.ElementDao;
 import acs.dal.LastIdValue;
 import acs.dal.LastValueDao;
-import acs.data.ElementEntity;
 import acs.data.Creator;
 import acs.data.ElementConverter;
+import acs.data.ElementEntity;
+import acs.validations.ElementNotFoundException;
+import acs.validations.InvalidElementName;
+import acs.validations.InvalidElementType;
+import acs.validations.Validator;
 
 @Service
 public class ElementServiceWithDB implements EnhancedElementService {
 	private ElementConverter entityConverter;
 	private ElementDao elementDao;
 	private LastValueDao lastValueDao;
+	private Validator validator;
 
-	public ElementServiceWithDB() {
+	@Autowired
+	public ElementServiceWithDB(Validator validator) {
+		this.validator = validator;
 	}
 	
 	@Autowired
@@ -47,9 +53,22 @@ public class ElementServiceWithDB implements EnhancedElementService {
 		this.entityConverter = entityCoverter;
 	}
 
+	/*
+	 * private String elementId; private String type; private String name; private
+	 * Boolean active; private Date createdTimestamp; private Creator createdBy;
+	 * private Location location; private Map<String, Object> elementAttribute;
+	 */
 	@Override
 	@Transactional
 	public ElementBoundary create(String managerEmail, ElementBoundary element) {
+		if(!this.validator.validateElementName(element)) {
+			throw new InvalidElementName("Invalid element name");
+		}
+		
+		if(!this.validator.validateElementType(element)) {
+			throw new InvalidElementType("Invalid element type");
+		}
+		
 		LastIdValue elementId = this.lastValueDao.save(new LastIdValue());
 		ElementEntity newElementEntity = this.entityConverter.convertToEntity(element);
 		newElementEntity.setCreatedBy(new Creator(managerEmail));
@@ -66,22 +85,22 @@ public class ElementServiceWithDB implements EnhancedElementService {
 	public ElementBoundary update(String managerEmail, String elementId, ElementBoundary update) {
 		ElementBoundary existing = this.getSpecificElement(managerEmail, elementId);
 		// Note there are 3 attributes that not gets updated (elemendId,Date, Creator)
-		if (update.getType() != null) {
+		if (this.validator.validateElementType(update)) {
 			existing.setType(update.getType());
 		}
 
-		if (update.getName() != null) {
+		if (this.validator.validateElementName(update)) {
 			existing.setName(update.getName());
 		}
 
-		if (update.getActive() != null && update.getActive() != existing.getActive()) {
+		if (this.validator.validateElementActive(update) && update.getActive() != existing.getActive()) {
 			existing.setActive(update.getActive());
 		}
 
-		if (update.getLocation() != null) {
+		if (this.validator.validateElementLocation(update)) {
 			existing.setLocation(update.getLocation());
 		}
-		if (update.getElementAttribute() != null) {
+		if (this.validator.validateElementAttr(update)) {
 			existing.setElementAttribute(update.getElementAttribute());
 		}
 

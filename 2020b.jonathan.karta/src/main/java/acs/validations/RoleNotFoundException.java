@@ -1,4 +1,4 @@
-package acs.logic;
+package acs.validations;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -12,7 +12,15 @@ public class RoleNotFoundException extends RuntimeException {
 		super();
 	}
 
+	public RoleNotFoundException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
 	public RoleNotFoundException(String message) {
 		super(message);
+	}
+
+	public RoleNotFoundException(Throwable cause) {
+		super(cause);
 	}
 }

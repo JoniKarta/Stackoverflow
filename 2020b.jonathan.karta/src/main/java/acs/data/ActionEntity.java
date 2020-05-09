@@ -14,7 +14,7 @@ import javax.persistence.TemporalType;
 @Table(name="ACTIONS")
 public class ActionEntity {
 
-	private String actionId; // In the ActionBoundary it was String
+	private Long actionId; // In the ActionBoundary it was String
 	private String type;
 	private Element element;
 	private Date creation;
@@ -25,7 +25,7 @@ public class ActionEntity {
 		
 	}
 
-	public ActionEntity(String actionId, String type, Element element, Date creation, Invoker invokedBy,
+	public ActionEntity(Long actionId, String type, Element element, Date creation, Invoker invokedBy,
 			String actionAttributes) {
 		super();
 		this.actionId = actionId;
@@ -37,11 +37,11 @@ public class ActionEntity {
 	}
 	
 	@Id
-	public String getActionId() {
+	public Long getActionId() {
 		return actionId;
 	}
 
-	public void setActionId(String actionId) {
+	public void setActionId(Long actionId) {
 		this.actionId = actionId;
 	}
 

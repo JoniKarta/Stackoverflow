@@ -10,12 +10,12 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import acs.boundaries.UserBoundary;
 import acs.boundaries.UserRole;
 import acs.data.UserConverter;
 import acs.data.UserEntity;
+import acs.validations.UserNotFoundException;
 
 //@Service
 public class UserServiceMockup implements UserService {

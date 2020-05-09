@@ -1,4 +1,4 @@
-package acs.controllers;
+package acs.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

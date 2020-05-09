@@ -70,8 +70,6 @@ public class ActionBoundary {
 		this.invokedBy = invokedBy;
 	}
 
-
-	
 	public Map<String, Object> getActionAttributes() {
 		return actionAttributes;
 	}
