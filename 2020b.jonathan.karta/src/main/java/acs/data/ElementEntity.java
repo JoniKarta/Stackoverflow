@@ -1,11 +1,16 @@
 package acs.data;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -23,13 +28,16 @@ public class ElementEntity {
 	private Creator createdBy;
 	private Location location;
 	private String elementAttribute; // In the ElementBoundary it was map
-
+	private ElementEntity parent;
+	private Set<ElementEntity> childrens;
+	
 	public ElementEntity() {
+		childrens = new HashSet<>();
 	}
 	
 	public ElementEntity(Long elementId, String type, String name, boolean active, Date createdTimestamp,
 			Creator createdBy, Location location, String elementAttribute) {
-		super();
+		this();
 		this.elementId = elementId;
 		this.type = type;
 		this.name = name;
@@ -108,5 +116,27 @@ public class ElementEntity {
 	public void setElementAttribute(String elementAttribute) {
 		this.elementAttribute = elementAttribute;
 	}
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	public ElementEntity getParent() {
+		return parent;
+	}
+	
+	public void setParent(ElementEntity parent) {
+		this.parent = parent;
+	}
+	
+	@OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
+	public Set<ElementEntity> getChildrens() {
+		return childrens;
+	}
 
+	public void setChildrens(Set<ElementEntity> childrens) {
+		this.childrens = childrens;
+	}
+	
+	public void addChild(ElementEntity child) {
+		this.childrens.add(child);
+		child.setParent(this);
+	}
 }

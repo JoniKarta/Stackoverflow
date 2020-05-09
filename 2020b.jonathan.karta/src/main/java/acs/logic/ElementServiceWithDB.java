@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import acs.boundaries.ElementBoundary;
+import acs.boundaries.ElementIdBoundary;
 import acs.dal.ElementDao;
 import acs.dal.LastIdValue;
 import acs.dal.LastValueDao;
@@ -20,7 +22,7 @@ import acs.data.Creator;
 import acs.data.ElementConverter;
 
 @Service
-public class ElementServiceWithDB implements ElementService {
+public class ElementServiceWithDB implements EnhancedElementService {
 	private ElementConverter entityCoverter;
 	private ElementDao elementDao;
 	private LastValueDao lastValueDao;
@@ -44,6 +46,8 @@ public class ElementServiceWithDB implements ElementService {
 	@Transactional
 	public ElementBoundary create(String managerEmail, ElementBoundary element) {
 		//String newId = UUID.randomUUID().toString();
+		
+		// Create new tupple in LastIdValue table with a non-used id
 		LastIdValue elementId = this.lastValueDao.save(new LastIdValue());
 		ElementEntity newElementEntity = 
 				this.entityCoverter
@@ -52,6 +56,8 @@ public class ElementServiceWithDB implements ElementService {
 		newElementEntity.setElementId(elementId.getLastIdValue());
 		newElementEntity.setCreatedTimestamp(new Date());
 		
+		// Delete the tupple from the LastIdValue table
+		this.lastValueDao.delete(elementId);
 		newElementEntity = this.elementDao.save(newElementEntity);
 		
 		return this.entityCoverter.convertFromEntity(newElementEntity);
@@ -125,4 +131,40 @@ public class ElementServiceWithDB implements ElementService {
 		// TODO Need to check if the mail belongs to an admin!
 		this.elementDao.deleteAll();
 	}
+
+	@Override
+	@Transactional
+	public void bindElements(String managerEmail, String parentElementId, ElementIdBoundary input) {
+		ElementEntity parent = this.elementDao.findById(this.entityCoverter.toEntityId(parentElementId))
+		.orElseThrow(()-> new ElementNotFoundException("Could not find element for id: " + parentElementId));
+		
+		ElementEntity child = this.elementDao.findById(this.entityCoverter.toEntityId(input.getId()))
+				.orElseThrow(()-> new ElementNotFoundException("Could not find element for id: " + parentElementId));
+		
+		parent.addChild(child);
+		this.elementDao.save(parent);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Set<ElementBoundary> getAllChildrens(String userEmail, String parentElementId) {
+		
+		return null;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Set<ElementBoundary> getAllParents(String userEmail, String childElementId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
+
+	
+	// TODO Implementation of enhanced element service interface
+
+	
+
+	
 }
