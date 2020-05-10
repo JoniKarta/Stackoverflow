@@ -8,33 +8,37 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-
 @Entity
-@Table(name="ELEMENTS")
+@Table(name = "ELEMENTS")
 public class ElementEntity {
 
 	private Long elementId; // In the ElementBoundary it was String
 	private String type;
 	private String name;
-	private Boolean active; 
+	private Boolean active;
 	private Date createdTimestamp;
 	private Creator createdBy;
 	private Location location;
 	private String elementAttribute; // In the ElementBoundary it was map
-	private ElementEntity parent;
+	private Set<ElementEntity> parents;
 	private Set<ElementEntity> childrens;
-	
+
 	public ElementEntity() {
 		childrens = new HashSet<>();
+		parents = new HashSet<>();
+
 	}
-	
+
 	public ElementEntity(Long elementId, String type, String name, boolean active, Date createdTimestamp,
 			Creator createdBy, Location location, String elementAttribute) {
 		this();
@@ -47,7 +51,7 @@ public class ElementEntity {
 		this.location = location;
 		this.elementAttribute = elementAttribute;
 	}
-	
+
 	@Id
 	public Long getElementId() {
 		return elementId;
@@ -80,16 +84,16 @@ public class ElementEntity {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date getCreatedTimestamp() {
 		return createdTimestamp;
 	}
-	
+
 	public void setCreatedTimestamp(Date createdTimestamp) {
 		this.createdTimestamp = createdTimestamp;
 	}
-	
+
 	@Embedded
 	public Creator getCreatedBy() {
 		return createdBy;
@@ -98,7 +102,7 @@ public class ElementEntity {
 	public void setCreatedBy(Creator createdBy) {
 		this.createdBy = createdBy;
 	}
-	
+
 	@Embedded
 	public Location getLocation() {
 		return location;
@@ -107,7 +111,7 @@ public class ElementEntity {
 	public void setLocation(Location location) {
 		this.location = location;
 	}
-	
+
 	@Lob
 	public String getElementAttribute() {
 		return elementAttribute;
@@ -116,17 +120,18 @@ public class ElementEntity {
 	public void setElementAttribute(String elementAttribute) {
 		this.elementAttribute = elementAttribute;
 	}
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	public ElementEntity getParent() {
-		return parent;
+
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "parents_childrens", joinColumns = @JoinColumn(name = "childrenId"), inverseJoinColumns = @JoinColumn(name = "parentId"))
+	public Set<ElementEntity> getParents() {
+		return parents;
 	}
-	
-	public void setParent(ElementEntity parent) {
-		this.parent = parent;
+
+	public void setParents(Set<ElementEntity> parents) {
+		this.parents = parents;
 	}
-	
-	@OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
+
+	@ManyToMany(mappedBy = "parents" ,fetch = FetchType.LAZY)
 	public Set<ElementEntity> getChildrens() {
 		return childrens;
 	}
@@ -134,18 +139,20 @@ public class ElementEntity {
 	public void setChildrens(Set<ElementEntity> childrens) {
 		this.childrens = childrens;
 	}
-	
+
 	public void addChild(ElementEntity child) {
-		this.childrens.add(child);
-		child.setParent(this);
+		this.childrens.add(child); // Add the the child to the children set
+		Set<ElementEntity> childParentsSet = child.getParents();
+		childParentsSet.add(this);
+		child.setParents(childParentsSet);
+
 	}
 
 	@Override
 	public String toString() {
 		return "ElementEntity [elementId=" + elementId + ", type=" + type + ", name=" + name + ", active=" + active
 				+ ", createdTimestamp=" + createdTimestamp + ", createdBy=" + createdBy + ", location=" + location
-				+ ", elementAttribute=" + elementAttribute + ", parent=" + parent + ", childrens=" + childrens + "]";
+				+ ", elementAttribute=" + elementAttribute + ", parent=" + parents + ", childrens=" + childrens + "]";
 	}
-	
-}
 
+}

@@ -170,12 +170,6 @@ public class ElementServiceWithDB implements EnhancedElementService {
 		ElementEntity child = this.elementDao.findById(this.entityConverter.toEntityId(childElementId))
 				.orElseThrow(() -> new ElementNotFoundException("Could not find element for id: " + childElementId));
 		
-		ElementEntity parent = child.getParent();
-		Set<ElementBoundary> boundariesSet = new HashSet<>();
-		if(parent != null) {
-			boundariesSet.add(this.entityConverter.convertFromEntity(parent));
-		}
-	
-		return boundariesSet;
+		return  child.getParents().stream().map(this.entityConverter::convertFromEntity).collect(Collectors.toSet());
 	}
 }

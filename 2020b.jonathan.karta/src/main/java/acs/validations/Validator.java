@@ -14,7 +14,7 @@ import acs.boundaries.UserRole;
 public class Validator {
 
 	public boolean validateUsername(UserBoundary user) {
-		return user.getUsername() != null;
+		return user.getUsername() != null && !user.getUsername().isEmpty() ;
 	}
 
 	public boolean validateUserBoundary(UserBoundary user) {
@@ -39,7 +39,7 @@ public class Validator {
 	
 	public boolean validateActionInvoker(ActionBoundary action) {
 		return action.getInvokedBy() != null && action.getInvokedBy().getEmail() != null && 
-				!action.getInvokedBy().getEmail().isEmpty();
+				validateUserEmail(action.getInvokedBy().getEmail());
 	}
 
 	public boolean isManager(UserBoundary user) {
