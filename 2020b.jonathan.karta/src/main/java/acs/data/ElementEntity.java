@@ -34,7 +34,6 @@ public class ElementEntity {
 	public ElementEntity() {
 		childrens = new HashSet<>();
 		parents = new HashSet<>();
-
 	}
 
 	public ElementEntity(Long elementId, String type, String name, boolean active, Date createdTimestamp,
@@ -138,12 +137,9 @@ public class ElementEntity {
 		this.childrens = childrens;
 	}
 
-	public void addChild(ElementEntity child) {
-		this.childrens.add(child); // Add the the child to the children set
-		Set<ElementEntity> childParentsSet = child.getParents();
-		childParentsSet.add(this);
-		child.setParents(childParentsSet);
-
+	public void bindChildAndParent(ElementEntity child) {
+		this.childrens.add(child); 
+		child.getParents().add(this);
 	}
 
 	@Override

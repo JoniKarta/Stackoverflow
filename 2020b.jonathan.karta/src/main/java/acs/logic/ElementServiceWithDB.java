@@ -150,7 +150,7 @@ public class ElementServiceWithDB implements EnhancedElementService {
 		ElementEntity child = this.elementDao.findById(this.entityConverter.toEntityId(input.getId()))
 				.orElseThrow(() -> new ElementNotFoundException("Could not find element for id: " + parentElementId));
 
-		parent.addChild(child);
+		parent.bindChildAndParent(child);
 		this.elementDao.save(parent);
 	}
 

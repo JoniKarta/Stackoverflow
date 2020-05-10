@@ -36,10 +36,9 @@ public class Validator {
 		return action != null && action.getElement().getElementId() != null &&
 				!action.getElement().getElementId().isEmpty();
 	}
-	
+
 	public boolean validateActionInvoker(ActionBoundary action) {
-		return action.getInvokedBy() != null && action.getInvokedBy().getEmail() != null && 
-				validateUserEmail(action.getInvokedBy().getEmail());
+		return action.getInvokedBy() != null && validateUserEmail(action.getInvokedBy().getEmail());
 	}
 
 	public boolean isManager(UserBoundary user) {
