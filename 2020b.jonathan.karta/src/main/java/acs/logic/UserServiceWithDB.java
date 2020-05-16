@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +16,7 @@ import acs.boundaries.UserBoundary;
 import acs.dal.UserDao;
 import acs.data.UserConverter;
 import acs.data.UserEntity;
+import acs.logic.services.EnhancedUserService;
 import acs.validations.ElementNotFoundException;
 import acs.validations.InvalidAvatarException;
 import acs.validations.InvalidEmailFormatException;
@@ -21,7 +25,7 @@ import acs.validations.RoleNotFoundException;
 import acs.validations.Validator;
 
 @Service
-public class UserServiceWithDB implements UserService {
+public class UserServiceWithDB implements EnhancedUserService {
 	private UserDao userDao;
 	private UserConverter userConverter;
 	private Validator validator;
@@ -113,5 +117,15 @@ public class UserServiceWithDB implements UserService {
 	@Transactional
 	public void deleteAllUsers(String adminEmail) {
 		this.userDao.deleteAll();
+	}
+
+	@Override
+	public List<UserBoundary> getAllUsers(String adminEmail, int size, int page) {
+		return this.userDao.findAll(
+				PageRequest.of(page, size,Direction.ASC,"email"))
+				.getContent() 
+				.stream()
+				.map(this.userConverter :: fromEntity)
+				.collect(Collectors.toList());
 	}
 }

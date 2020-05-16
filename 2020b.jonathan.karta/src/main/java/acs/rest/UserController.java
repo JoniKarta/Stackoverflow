@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import acs.boundaries.UserBoundary;
-import acs.logic.UserService;
+import acs.logic.services.UserService;
 
 @CrossOrigin
 @RestController

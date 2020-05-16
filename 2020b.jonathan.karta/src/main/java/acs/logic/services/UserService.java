@@ -1,4 +1,4 @@
-package acs.logic;
+package acs.logic.services;
 
 import java.util.List;
 
@@ -15,4 +15,5 @@ public interface UserService {
 	public List<UserBoundary> getAllUsers(String adminEmail);
 
 	public void deleteAllUsers(String adminEmail);
+
 }

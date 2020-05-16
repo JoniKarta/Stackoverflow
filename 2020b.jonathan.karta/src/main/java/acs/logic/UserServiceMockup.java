@@ -15,6 +15,7 @@ import acs.boundaries.UserBoundary;
 import acs.boundaries.UserRole;
 import acs.data.UserConverter;
 import acs.data.UserEntity;
+import acs.logic.services.UserService;
 import acs.validations.UserNotFoundException;
 
 //@Service
@@ -97,4 +98,6 @@ public class UserServiceMockup implements UserService {
 	public void deleteAllUsers(String adminEmail) {
 		this.database.clear();
 	}
+
+	
 }

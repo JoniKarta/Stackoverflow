@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import acs.boundaries.ActionBoundary;
-import acs.logic.ActionService;
+import acs.logic.services.ActionService;
 
 @RestController
 public class ActionController {

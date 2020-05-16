@@ -20,6 +20,7 @@ import acs.dal.LastElementValueDao;
 import acs.data.Creator;
 import acs.data.ElementConverter;
 import acs.data.ElementEntity;
+import acs.logic.services.EnhancedElementService;
 import acs.validations.ElementNotFoundException;
 import acs.validations.InvalidElementName;
 import acs.validations.InvalidElementType;

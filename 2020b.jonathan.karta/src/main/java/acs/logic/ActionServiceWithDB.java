@@ -3,24 +3,31 @@ package acs.logic;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import acs.boundaries.ActionBoundary;
+import acs.boundaries.UserBoundary;
 import acs.dal.ActionDao;
 import acs.dal.LastActionIdValue;
 import acs.dal.LastActionValueDao;
 import acs.data.ActionConverter;
 import acs.data.ActionEntity;
+import acs.logic.services.ActionService;
+import acs.logic.services.EnhancedActionService;
 import acs.validations.InvalidActionElement;
 import acs.validations.InvalidActionInvoker;
 import acs.validations.InvalidActionType;
 import acs.validations.Validator;
 
 @Service
-public class ActionServiceWithDB implements ActionService {
+public class ActionServiceWithDB implements EnhancedActionService {
 	private ActionDao actionDao;
 	private ActionConverter actionConverter;
 	private LastActionValueDao lastValueDao;
@@ -87,4 +94,15 @@ public class ActionServiceWithDB implements ActionService {
 	public void deleteAllActions(String adminEmail) {
 		actionDao.deleteAll();
 	}
+
+	@Override
+	public List<ActionBoundary> getAllActions(String adminEmail, int size, int page) {
+		return this.actionDao.findAll(
+				PageRequest.of(page, size, Direction.ASC, "actionId"))
+				.getContent()
+				.stream()
+				.map(entity->(ActionBoundary)this.actionConverter.convertFromEntity(entity))
+				.collect(Collectors.toList());
+	}
+
 }

@@ -1,4 +1,4 @@
-package acs.logic;
+package acs.logic.services;
 
 import java.util.List;
 
@@ -11,5 +11,6 @@ public interface ActionService {
 	public List<ActionBoundary> getAllActions(String adminEmail);
 
 	public void deleteAllActions(String adminEmail);
+
 
 }
