@@ -9,11 +9,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import acs.boundaries.ElementBoundary;
 import acs.boundaries.ElementIdBoundary;
+import acs.boundaries.UserBoundary;
 import acs.dal.ElementDao;
 import acs.dal.LastElementIdValue;
 import acs.dal.LastElementValueDao;
@@ -26,12 +29,14 @@ import acs.validations.InvalidElementName;
 import acs.validations.InvalidElementType;
 import acs.validations.Validator;
 
+// TODO : Add player/manager role check in all functions
 @Service
 public class ElementServiceWithDB implements EnhancedElementService {
 	private ElementConverter entityConverter;
 	private ElementDao elementDao;
 	private LastElementValueDao lastValueDao;
 	private Validator validator;
+	private UserServiceWithDB userService;
 
 	@Autowired
 	public ElementServiceWithDB(Validator validator) {
@@ -51,6 +56,11 @@ public class ElementServiceWithDB implements EnhancedElementService {
 	@Autowired
 	public void setEntityCoverter(ElementConverter entityCoverter) {
 		this.entityConverter = entityCoverter;
+	}
+
+	@Autowired
+	public void setUserService(UserServiceWithDB userService) {
+		this.userService = userService;
 	}
 
 	/*
@@ -171,5 +181,135 @@ public class ElementServiceWithDB implements EnhancedElementService {
 				.orElseThrow(() -> new ElementNotFoundException("Could not find element for id: " + childElementId));
 		
 		return  child.getParents().stream().map(this.entityConverter::convertFromEntity).collect(Collectors.toSet());
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<ElementBoundary> searchElementsByName(String userEmail, String name, int size, int page) {
+		UserBoundary user = this.userService.login(userEmail);
+		// If role is player return only elements with ACTIVE = TRUE
+		if (this.validator.isPlayer(user)) {
+			return this.elementDao.findAllByActiveAndNameLike(
+					true, name, PageRequest.of(page, size, Direction.ASC, "elementId"))
+			.stream()
+			.map(this.entityConverter::convertFromEntity)
+			.collect(Collectors.toList());
+		}
+		
+		// If role is admin / manager
+		if (this.validator.isAdmin(user) || this.validator.isManager(user))
+		return this.elementDao.findAllByNameLike(
+				name, PageRequest.of(page, size, Direction.ASC, "elementId"))
+		.stream()
+		.map(this.entityConverter::convertFromEntity)
+		.collect(Collectors.toList());
+		
+		// If for unknown reason there is other role to the user return empty list
+		return new ArrayList<ElementBoundary>();
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<ElementBoundary> searchElementsByType(String userEmail, String type, int size, int page) {
+		UserBoundary user = this.userService.login(userEmail);
+		// If role is player return only elements with ACTIVE = TRUE
+		if (this.validator.isPlayer(user)) {
+			return this.elementDao.findAllByActiveAndType(
+					true, type, PageRequest.of(page, size, Direction.ASC, "elementId"))
+			.stream()
+			.map(this.entityConverter::convertFromEntity)
+			.collect(Collectors.toList());
+		}
+		
+		// If role is admin / manager
+		if (this.validator.isAdmin(user) || this.validator.isManager(user))
+		return this.elementDao.findAllByType(
+				type, PageRequest.of(page, size, Direction.ASC, "elementId"))
+		.stream()
+		.map(this.entityConverter::convertFromEntity)
+		.collect(Collectors.toList());
+		
+		// If for an unknown reason the user has other role, return empty list.
+		return new ArrayList<ElementBoundary>();
+	}
+
+	@Override
+	public List<ElementBoundary> getAllElements(String userEmail, int size, int page) {
+		UserBoundary user = this.userService.login(userEmail);
+		// If role is player return only elements with ACTIVE = TRUE
+		if (this.validator.isPlayer(user)) {
+			return this.elementDao.findAllByActive(
+					true, PageRequest.of(page, size, Direction.ASC, "elementId"))
+			.stream()
+			.map(this.entityConverter::convertFromEntity)
+			.collect(Collectors.toList());
+		}
+		
+		// If role is Admin / Manager
+		if (this.validator.isAdmin(user) || this.validator.isManager(user))
+		return this.elementDao.findAll(
+				PageRequest.of(page, size, Direction.ASC, "elementId"))
+		.stream()
+		.map(this.entityConverter::convertFromEntity)
+		.collect(Collectors.toList());
+		
+		// If for an unknown reason the user has other role, return empty list.
+		return new ArrayList<ElementBoundary>();
+	}
+
+	@Override
+	public List<ElementBoundary> getAllElementChildrens(String userEmail, String parentElementId, int size, int page) {
+		UserBoundary parent = this.userService.login(userEmail);
+		Optional<ElementEntity> parentElement = this.elementDao.findById(this.entityConverter.toEntityId(parentElementId));
+		// If role is player return only elements with ACTIVE = TRUE
+		if (this.validator.isPlayer(parent)) {
+			return this.elementDao.findAllByActiveAndParents(
+					true,
+					parentElement.get(),
+					PageRequest.of(page, size, Direction.ASC, "elementId"))
+			.stream()
+			.map(this.entityConverter::convertFromEntity)
+			.collect(Collectors.toList());
+		}
+		
+		// If role is Admin / Manager
+		if (this.validator.isAdmin(parent) || this.validator.isManager(parent))
+		return this.elementDao.findAllByParents(
+				parentElement.get(),
+				PageRequest.of(page, size, Direction.ASC, "elementId"))
+		.stream()
+		.map(this.entityConverter::convertFromEntity)
+		.collect(Collectors.toList());
+		
+		// If for an unknown reason the user has other role, return empty list.
+		return new ArrayList<ElementBoundary>();
+	}
+
+	@Override
+	public List<ElementBoundary> getAllElementParents(String userEmail, String childElementId, int size, int page) {
+		UserBoundary child = this.userService.login(userEmail);
+		Optional<ElementEntity> childElement = this.elementDao.findById(this.entityConverter.toEntityId(childElementId));
+		// If role is player return only elements with ACTIVE = TRUE
+		if (this.validator.isPlayer(child)) {
+			return this.elementDao.findAllByActiveAndChildrens(
+					true,
+					childElement.get(),
+					PageRequest.of(page, size, Direction.ASC, "elementId"))
+			.stream()
+			.map(this.entityConverter::convertFromEntity)
+			.collect(Collectors.toList());
+		}
+		
+		// If role is Admin / Manager
+		if (this.validator.isAdmin(child) || this.validator.isManager(child))
+		return this.elementDao.findAllByChildrens(
+				childElement.get(),
+				PageRequest.of(page, size, Direction.ASC, "elementId"))
+		.stream()
+		.map(this.entityConverter::convertFromEntity)
+		.collect(Collectors.toList());
+		
+		// If for an unknown reason the user has other role, return empty list.
+		return new ArrayList<ElementBoundary>();
 	}
 }

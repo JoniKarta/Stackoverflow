@@ -1,7 +1,6 @@
 package acs.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,11 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import acs.boundaries.ActionBoundary;
 import acs.boundaries.UserBoundary;
-import acs.logic.services.ActionService;
 import acs.logic.services.ElementService;
 import acs.logic.services.EnhancedActionService;
 import acs.logic.services.EnhancedUserService;
-import acs.logic.services.UserService;
 
 @RestController
 public class AdminController {

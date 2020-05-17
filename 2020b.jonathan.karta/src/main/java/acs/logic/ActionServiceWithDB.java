@@ -6,20 +6,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import acs.boundaries.ActionBoundary;
-import acs.boundaries.UserBoundary;
 import acs.dal.ActionDao;
 import acs.dal.LastActionIdValue;
 import acs.dal.LastActionValueDao;
 import acs.data.ActionConverter;
 import acs.data.ActionEntity;
-import acs.logic.services.ActionService;
 import acs.logic.services.EnhancedActionService;
 import acs.validations.InvalidActionElement;
 import acs.validations.InvalidActionInvoker;
