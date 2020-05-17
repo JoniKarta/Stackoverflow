@@ -234,6 +234,7 @@ public class ElementServiceWithDB implements EnhancedElementService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<ElementBoundary> getAllElements(String userEmail, int size, int page) {
 		UserBoundary user = this.userService.login(userEmail);
 		// If role is player return only elements with ACTIVE = TRUE
@@ -258,6 +259,7 @@ public class ElementServiceWithDB implements EnhancedElementService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<ElementBoundary> getAllElementChildrens(String userEmail, String parentElementId, int size, int page) {
 		UserBoundary parent = this.userService.login(userEmail);
 		Optional<ElementEntity> parentElement = this.elementDao.findById(this.entityConverter.toEntityId(parentElementId));
@@ -286,6 +288,7 @@ public class ElementServiceWithDB implements EnhancedElementService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<ElementBoundary> getAllElementParents(String userEmail, String childElementId, int size, int page) {
 		UserBoundary child = this.userService.login(userEmail);
 		Optional<ElementEntity> childElement = this.elementDao.findById(this.entityConverter.toEntityId(childElementId));
