@@ -9,6 +9,8 @@ import acs.boundaries.ActionBoundary;
 import acs.boundaries.ElementBoundary;
 import acs.boundaries.UserBoundary;
 import acs.boundaries.UserRole;
+import acs.data.UserEntity;
+import acs.data.UserRoleEntity;
 
 @Component
 public class Validator {
@@ -18,8 +20,7 @@ public class Validator {
 	}
 
 	public boolean validateUserBoundary(UserBoundary user) {
-		this.validateUserEmail(user.getEmail());
-		return true;
+		return this.validateUserEmail(user.getEmail());
 	}
 
 	public boolean validateUserEmail(String userEmail) {
@@ -41,17 +42,17 @@ public class Validator {
 		return action.getInvokedBy() != null && validateUserEmail(action.getInvokedBy().getEmail());
 	}
 
-	public boolean isManager(UserBoundary user) {
-		return user.getRole() == UserRole.MANAGER;
+	public boolean isManager(UserEntity user) {
+		return user.getRole() == UserRoleEntity.MANAGER;
 
 	}
 
-	public boolean isPlayer(UserBoundary user) {
-		return user.getRole() == UserRole.PLAYER;
+	public boolean isPlayer(UserEntity user) {
+		return user.getRole() == UserRoleEntity.PLAYER;
 	}
 
-	public boolean isAdmin(UserBoundary user) {
-		return user.getRole() == UserRole.ADMIN;
+	public boolean isAdmin(UserEntity user) {
+		return user.getRole() == UserRoleEntity.ADMIN;
 	}
 
 	public boolean isRoleExist(UserBoundary user) {

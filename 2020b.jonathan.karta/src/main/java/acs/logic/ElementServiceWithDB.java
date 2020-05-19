@@ -16,13 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import acs.boundaries.ElementBoundary;
 import acs.boundaries.ElementIdBoundary;
-import acs.boundaries.UserBoundary;
 import acs.dal.ElementDao;
 import acs.dal.LastElementIdValue;
 import acs.dal.LastElementValueDao;
+import acs.dal.UserDao;
 import acs.data.Creator;
 import acs.data.ElementConverter;
 import acs.data.ElementEntity;
+import acs.data.UserEntity;
 import acs.logic.services.EnhancedElementService;
 import acs.validations.ElementNotFoundException;
 import acs.validations.InvalidElementName;
@@ -36,7 +37,7 @@ public class ElementServiceWithDB implements EnhancedElementService {
 	private ElementDao elementDao;
 	private LastElementValueDao lastValueDao;
 	private Validator validator;
-	private UserServiceWithDB userService;
+	private UserDao userDao;
 
 	@Autowired
 	public ElementServiceWithDB(Validator validator) {
@@ -59,8 +60,8 @@ public class ElementServiceWithDB implements EnhancedElementService {
 	}
 
 	@Autowired
-	public void setUserService(UserServiceWithDB userService) {
-		this.userService = userService;
+	public void setUserService(UserDao userDao) {
+		this.userDao = userDao;
 	}
 
 	/*
@@ -186,9 +187,9 @@ public class ElementServiceWithDB implements EnhancedElementService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<ElementBoundary> searchElementsByName(String userEmail, String name, int size, int page) {
-		UserBoundary user = this.userService.login(userEmail);
+		Optional<UserEntity> user = this.userDao.findById(userEmail);
 		// If role is player return only elements with ACTIVE = TRUE
-		if (this.validator.isPlayer(user)) {
+		if (this.validator.isPlayer(user.get())) {
 			return this.elementDao.findAllByActiveAndNameLike(
 					true, name, PageRequest.of(page, size, Direction.ASC, "elementId"))
 			.stream()
@@ -197,7 +198,7 @@ public class ElementServiceWithDB implements EnhancedElementService {
 		}
 		
 		// If role is admin / manager
-		if (this.validator.isAdmin(user) || this.validator.isManager(user))
+		if (this.validator.isAdmin(user.get()) || this.validator.isManager(user.get()))
 		return this.elementDao.findAllByNameLike(
 				name, PageRequest.of(page, size, Direction.ASC, "elementId"))
 		.stream()
@@ -211,9 +212,9 @@ public class ElementServiceWithDB implements EnhancedElementService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<ElementBoundary> searchElementsByType(String userEmail, String type, int size, int page) {
-		UserBoundary user = this.userService.login(userEmail);
+		Optional<UserEntity> user = this.userDao.findById(userEmail);
 		// If role is player return only elements with ACTIVE = TRUE
-		if (this.validator.isPlayer(user)) {
+		if (this.validator.isPlayer(user.get())) {
 			return this.elementDao.findAllByActiveAndType(
 					true, type, PageRequest.of(page, size, Direction.ASC, "elementId"))
 			.stream()
@@ -222,7 +223,7 @@ public class ElementServiceWithDB implements EnhancedElementService {
 		}
 		
 		// If role is admin / manager
-		if (this.validator.isAdmin(user) || this.validator.isManager(user))
+		if (this.validator.isAdmin(user.get()) || this.validator.isManager(user.get()))
 		return this.elementDao.findAllByType(
 				type, PageRequest.of(page, size, Direction.ASC, "elementId"))
 		.stream()
@@ -236,9 +237,9 @@ public class ElementServiceWithDB implements EnhancedElementService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<ElementBoundary> getAllElements(String userEmail, int size, int page) {
-		UserBoundary user = this.userService.login(userEmail);
+		Optional<UserEntity> user = this.userDao.findById(userEmail);
 		// If role is player return only elements with ACTIVE = TRUE
-		if (this.validator.isPlayer(user)) {
+		if (this.validator.isPlayer(user.get())) {
 			return this.elementDao.findAllByActive(
 					true, PageRequest.of(page, size, Direction.ASC, "elementId"))
 			.stream()
@@ -247,7 +248,7 @@ public class ElementServiceWithDB implements EnhancedElementService {
 		}
 		
 		// If role is Admin / Manager
-		if (this.validator.isAdmin(user) || this.validator.isManager(user))
+		if (this.validator.isAdmin(user.get()) || this.validator.isManager(user.get()))
 		return this.elementDao.findAll(
 				PageRequest.of(page, size, Direction.ASC, "elementId"))
 		.stream()
@@ -261,10 +262,10 @@ public class ElementServiceWithDB implements EnhancedElementService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<ElementBoundary> getAllElementChildrens(String userEmail, String parentElementId, int size, int page) {
-		UserBoundary parent = this.userService.login(userEmail);
+		Optional<UserEntity> parent = this.userDao.findById(userEmail);
 		Optional<ElementEntity> parentElement = this.elementDao.findById(this.entityConverter.toEntityId(parentElementId));
 		// If role is player return only elements with ACTIVE = TRUE
-		if (this.validator.isPlayer(parent)) {
+		if (this.validator.isPlayer(parent.get())) {
 			return this.elementDao.findAllByActiveAndParents(
 					true,
 					parentElement.get(),
@@ -275,7 +276,7 @@ public class ElementServiceWithDB implements EnhancedElementService {
 		}
 		
 		// If role is Admin / Manager
-		if (this.validator.isAdmin(parent) || this.validator.isManager(parent))
+		if (this.validator.isAdmin(parent.get()) || this.validator.isManager(parent.get()))
 		return this.elementDao.findAllByParents(
 				parentElement.get(),
 				PageRequest.of(page, size, Direction.ASC, "elementId"))
@@ -290,10 +291,10 @@ public class ElementServiceWithDB implements EnhancedElementService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<ElementBoundary> getAllElementParents(String userEmail, String childElementId, int size, int page) {
-		UserBoundary child = this.userService.login(userEmail);
+		Optional<UserEntity> child = this.userDao.findById(userEmail);
 		Optional<ElementEntity> childElement = this.elementDao.findById(this.entityConverter.toEntityId(childElementId));
 		// If role is player return only elements with ACTIVE = TRUE
-		if (this.validator.isPlayer(child)) {
+		if (this.validator.isPlayer(child.get())) {
 			return this.elementDao.findAllByActiveAndChildrens(
 					true,
 					childElement.get(),
@@ -304,7 +305,7 @@ public class ElementServiceWithDB implements EnhancedElementService {
 		}
 		
 		// If role is Admin / Manager
-		if (this.validator.isAdmin(child) || this.validator.isManager(child))
+		if (this.validator.isAdmin(child.get()) || this.validator.isManager(child.get()))
 		return this.elementDao.findAllByChildrens(
 				childElement.get(),
 				PageRequest.of(page, size, Direction.ASC, "elementId"))
