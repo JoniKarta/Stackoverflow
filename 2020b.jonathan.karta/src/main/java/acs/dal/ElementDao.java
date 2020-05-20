@@ -19,6 +19,9 @@ public interface ElementDao extends PagingAndSortingRepository<ElementEntity, Lo
 
 	public List<ElementEntity> findAllByType(
 			@Param("type") String type, Pageable pageable);
+	
+	public List<ElementEntity> findAllByTypeLike(
+			@Param("type") String type, Pageable pageable);
 
 	public List<ElementEntity> findAllByTypeNotLike(
 			@Param("type") String type, Pageable pageable);
@@ -34,6 +37,11 @@ public interface ElementDao extends PagingAndSortingRepository<ElementEntity, Lo
 			Pageable pageable);
 	
 	public List<ElementEntity> findAllByActiveAndType(
+			@Param("active") boolean active, 
+			@Param("type") String type,
+			Pageable pageable);
+	
+	public List<ElementEntity> findAllByActiveAndTypeLike(
 			@Param("active") boolean active, 
 			@Param("type") String type,
 			Pageable pageable);

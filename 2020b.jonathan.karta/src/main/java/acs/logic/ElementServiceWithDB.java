@@ -215,7 +215,7 @@ public class ElementServiceWithDB implements EnhancedElementService {
 		Optional<UserEntity> user = this.userDao.findById(userEmail);
 		// If role is player return only elements with ACTIVE = TRUE
 		if (this.validator.isPlayer(user.get())) {
-			return this.elementDao.findAllByActiveAndType(
+			return this.elementDao.findAllByActiveAndTypeLike(
 					true, type, PageRequest.of(page, size, Direction.ASC, "elementId"))
 			.stream()
 			.map(this.entityConverter::convertFromEntity)
@@ -224,7 +224,7 @@ public class ElementServiceWithDB implements EnhancedElementService {
 		
 		// If role is admin / manager
 		if (this.validator.isAdmin(user.get()) || this.validator.isManager(user.get()))
-		return this.elementDao.findAllByType(
+		return this.elementDao.findAllByTypeLike(
 				type, PageRequest.of(page, size, Direction.ASC, "elementId"))
 		.stream()
 		.map(this.entityConverter::convertFromEntity)
@@ -290,6 +290,7 @@ public class ElementServiceWithDB implements EnhancedElementService {
 
 	@Override
 	@Transactional(readOnly = true)
+	// @ TODO : Check if null !
 	public List<ElementBoundary> getAllElementParents(String userEmail, String childElementId, int size, int page) {
 		Optional<UserEntity> child = this.userDao.findById(userEmail);
 		Optional<ElementEntity> childElement = this.elementDao.findById(this.entityConverter.toEntityId(childElementId));
