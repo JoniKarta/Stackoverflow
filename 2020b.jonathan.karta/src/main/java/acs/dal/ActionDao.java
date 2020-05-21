@@ -4,6 +4,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 import acs.data.ActionEntity;
 
-public interface ActionDao extends PagingAndSortingRepository<ActionEntity, String> {
+public interface ActionDao extends PagingAndSortingRepository<ActionEntity, Long> {
 
 }

@@ -43,7 +43,6 @@ public class UserControllerKit1Tests {
 	@BeforeEach
 	public void setup() {
 		this.restTemplate.delete(this.adminUrl + "/{adminEmail}", "Jonathan@gmail.com");
-
 	}
 
 	@AfterEach
@@ -58,11 +57,11 @@ public class UserControllerKit1Tests {
 
 	@Test
 	public void testGetAllUsersOnServerInitReturnsEmptyUserBoundaryArray() throws Exception {
-		// GIVEN the server is up
-		// AND the server is empty  
-		// WHEN i invoke GET request with the url /acs/admin/users/{adminEmail} 
-		// THEN the operation will response status 2xx
-		// AND the server will return to the clinet empty array
+		 /* GIVEN the server is up
+		 AND the server is empty  
+		 WHEN i invoke GET request with the url /acs/admin/users/{adminEmail} 
+		 THEN the operation will response status 2xx
+		 AND the server will return to the client empty array*/
 
 		UserBoundary[] users = this.restTemplate
 				.getForObject(this.adminUrl + "/{adminEmail}", UserBoundary[].class, "Jonathan@gmail.com");
@@ -113,10 +112,10 @@ public class UserControllerKit1Tests {
 	
 	@Test
 	public void testDeleteAllUsersFromTheDatabaseReturnsEmptyUserBoundaryArray() {
-		// GIVEN the server is up 
-		// WHEN i invoke the DETELE request with the url : acs/admin/users/Jonathan@gmail.com
-		// THEN the delete operation responded with status 2xx
-		// AND the server return to the client empty array
+		/* GIVEN the server is up 
+		 WHEN i invoke the DETELE request with the url : acs/admin/users/Jonathan@gmail.com
+		 THEN the delete operation responded with status 2xx
+		 AND the server return to the client empty array*/
 		this.restTemplate.delete(this.adminUrl + "/{adminEmail}", "Jonathan@gmail.com");
 		UserBoundary[] users = this.restTemplate.getForObject(this.adminUrl + "/{adminEmail}", UserBoundary[].class, "Jonathan@gmail.com");
 		assertThat(users).isEmpty();
