@@ -32,7 +32,6 @@ import acs.validations.InvalidRoleException;
 import acs.validations.UserNotFoundException;
 import acs.validations.Validator;
 
-// TODO : Add player/manager role check in all functions
 @Service
 public class ElementServiceWithDB implements EnhancedElementService {
 	private ElementConverter entityConverter;
@@ -66,11 +65,6 @@ public class ElementServiceWithDB implements EnhancedElementService {
 		this.userDao = userDao;
 	}
 
-	/*
-	 * private String elementId; private String type; private String name; private
-	 * Boolean active; private Date createdTimestamp; private Creator createdBy;
-	 * private Location location; private Map<String, Object> elementAttribute;
-	 */
 	@Override
 	@Transactional
 	public ElementBoundary create(String managerEmail, ElementBoundary element) {
@@ -212,7 +206,10 @@ public class ElementServiceWithDB implements EnhancedElementService {
 		ElementEntity parent = this.elementDao.findById(this.entityConverter.toEntityId(parentElementId))
 				.orElseThrow(() -> new ElementNotFoundException("Could not find element for id: " + parentElementId));
 		
-		return parent.getChildrens().stream().map(this.entityConverter::convertFromEntity).collect(Collectors.toSet());
+		return parent.getChildrens()
+				.stream()
+				.map(this.entityConverter::convertFromEntity)
+				.collect(Collectors.toSet());
 	}
 
 	// ** Updated method exist with pagination 
@@ -222,7 +219,10 @@ public class ElementServiceWithDB implements EnhancedElementService {
 		ElementEntity child = this.elementDao.findById(this.entityConverter.toEntityId(childElementId))
 				.orElseThrow(() -> new ElementNotFoundException("Could not find element for id: " + childElementId));
 		
-		return  child.getParents().stream().map(this.entityConverter::convertFromEntity).collect(Collectors.toSet());
+		return  child.getParents()
+				.stream()
+				.map(this.entityConverter::convertFromEntity)
+				.collect(Collectors.toSet());
 	}
 
 	@Override
