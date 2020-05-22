@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import acs.boundaries.ActionBoundary;
 import acs.boundaries.ElementBoundary;
 import acs.boundaries.UserBoundary;
+import acs.data.ElementEntity;
 import acs.data.UserEntity;
 import acs.data.UserRoleEntity;
 
@@ -90,5 +91,9 @@ public class Validator {
 	
 	public boolean validateElementAttr(ElementBoundary element) {
 		return element.getElementAttribute() != null;
+	}
+
+	public boolean isActive(ElementEntity elementEntity) {
+		return elementEntity.getActive().booleanValue();
 	}
 }

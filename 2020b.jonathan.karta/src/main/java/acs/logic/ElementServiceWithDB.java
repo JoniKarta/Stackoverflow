@@ -7,11 +7,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import acs.boundaries.ElementBoundary;
 import acs.boundaries.ElementIdBoundary;
 import acs.dal.ElementDao;
@@ -26,6 +28,8 @@ import acs.logic.services.EnhancedElementService;
 import acs.validations.ElementNotFoundException;
 import acs.validations.InvalidElementName;
 import acs.validations.InvalidElementType;
+import acs.validations.InvalidRoleException;
+import acs.validations.UserNotFoundException;
 import acs.validations.Validator;
 
 // TODO : Add player/manager role check in all functions
@@ -70,74 +74,103 @@ public class ElementServiceWithDB implements EnhancedElementService {
 	@Override
 	@Transactional
 	public ElementBoundary create(String managerEmail, ElementBoundary element) {
-		if(!this.validator.validateElementName(element)) {
-			throw new InvalidElementName("Invalid element name");
-		}
-		
-		if(!this.validator.validateElementType(element)) {
-			throw new InvalidElementType("Invalid element type");
-		}
-		
-		LastElementIdValue elementId = this.lastValueDao.save(new LastElementIdValue());
-		ElementEntity newElementEntity = this.entityConverter.convertToEntity(element);
-		newElementEntity.setCreatedBy(new Creator(managerEmail));
-		newElementEntity.setElementId(elementId.getLastIdValue());
-		newElementEntity.setCreatedTimestamp(new Date());
+		Optional<UserEntity> user = this.userDao.findById(managerEmail);
+		if (user.isPresent() && (this.validator.isManager(user.get())
+				|| this.validator.isAdmin(user.get()))) {
+			if (!this.validator.validateElementName(element)) {
+				throw new InvalidElementName("Invalid element name");
+			}
 
-		this.lastValueDao.delete(elementId);
-		newElementEntity = this.elementDao.save(newElementEntity);
-		return this.entityConverter.convertFromEntity(newElementEntity);
+			if (!this.validator.validateElementType(element)) {
+				throw new InvalidElementType("Invalid element type");
+			}
+
+			LastElementIdValue elementId = this.lastValueDao.save(new LastElementIdValue());
+			ElementEntity newElementEntity = this.entityConverter.convertToEntity(element);
+			newElementEntity.setCreatedBy(new Creator(managerEmail));
+			newElementEntity.setElementId(elementId.getLastIdValue());
+			newElementEntity.setCreatedTimestamp(new Date());
+
+			this.lastValueDao.delete(elementId);
+			newElementEntity = this.elementDao.save(newElementEntity);
+			return this.entityConverter.convertFromEntity(newElementEntity);
+		} else {
+			throw new InvalidRoleException("Unauthorized user");
+		}
 	}
 
 	@Override
 	@Transactional
 	public ElementBoundary update(String managerEmail, String elementId, ElementBoundary update) {
-		ElementBoundary existing = this.getSpecificElement(managerEmail, elementId);
-		// Note there are 3 attributes that not gets updated (elemendId,Date, Creator)
-		if (this.validator.validateElementType(update)) {
-			existing.setType(update.getType());
-		}
+		Optional<UserEntity> user = this.userDao.findById(managerEmail);
+		if (user.isPresent() && (this.validator.isManager(user.get()) || this.validator.isAdmin(user.get()))) {
+			ElementBoundary existing = this.getSpecificElement(managerEmail, elementId);
+			// Note there are 3 attributes that not gets updated (elemendId,Date, Creator)
+			if (this.validator.validateElementType(update)) {
+				existing.setType(update.getType());
+			}
 
-		if (this.validator.validateElementName(update)) {
-			existing.setName(update.getName());
-		}
+			if (this.validator.validateElementName(update)) {
+				existing.setName(update.getName());
+			}
 
-		if (this.validator.validateElementActive(update) && update.getActive() != existing.getActive()) {
-			existing.setActive(update.getActive());
-		}
+			if (this.validator.validateElementActive(update) && update.getActive() != existing.getActive()) {
+				existing.setActive(update.getActive());
+			}
 
-		if (this.validator.validateElementLocation(update)) {
-			existing.setLocation(update.getLocation());
-		}
-		if (this.validator.validateElementAttr(update)) {
-			existing.setElementAttribute(update.getElementAttribute());
-		}
+			if (this.validator.validateElementLocation(update)) {
+				existing.setLocation(update.getLocation());
+			}
+			if (this.validator.validateElementAttr(update)) {
+				existing.setElementAttribute(update.getElementAttribute());
+			}
 
-		this.elementDao.save(this.entityConverter.convertToEntity(existing));
+			this.elementDao.save(this.entityConverter.convertToEntity(existing));
 
-		return existing;
+			return existing;
+		} else {
+			throw new InvalidRoleException("Unauthorized user");
+		}
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public ElementBoundary getSpecificElement(String userEmail, String elementId) {
 		Optional<ElementEntity> entity = this.elementDao.findById(this.entityConverter.toEntityId(elementId));
+		Optional<UserEntity> user = this.userDao.findById(userEmail);
+		if (user.isPresent()) {
+			if (entity.isPresent()) {
+				if (this.validator.isManager(user.get()) || this.validator.isAdmin(user.get())) {
+					return this.entityConverter.convertFromEntity(entity.get());
+				} else if (this.validator.isActive(entity.get()) && this.validator.isPlayer(user.get())) {
+					return this.entityConverter.convertFromEntity(entity.get());
+				} else {
+					throw new InvalidRoleException("Unauthorized user");
+				}
+			} else {
+				throw new ElementNotFoundException("Could not find element for id: " + elementId);
+			}
 
-		if (entity.isPresent()) {
-			return this.entityConverter.convertFromEntity(entity.get());
 		} else {
-			throw new ElementNotFoundException("Could not find element for id: " + elementId);
+			throw new UserNotFoundException("Invalid user");
 		}
 	}
 
+	// ** New method of getAllElements with pagination exist
 	@Override
 	@Transactional(readOnly = true)
 	public List<ElementBoundary> getAll(String userEmail) {
-
+		Optional<UserEntity> user = this.userDao.findById(userEmail);
 		List<ElementBoundary> rv = new ArrayList<>();
-
-		Iterable<ElementEntity> content = this.elementDao.findAll();
-
+		Iterable<ElementEntity> content = null;
+		if (user.isPresent()) {
+			if (this.validator.isManager(user.get()) || this.validator.isAdmin(user.get()))
+				content = this.elementDao.findAll();
+			else
+				content = this.elementDao.findAllByActive(false);
+		} else {
+			throw new UserNotFoundException("Invalid user");
+		}
 		for (ElementEntity element : content) {
 			rv.add(this.entityConverter.convertFromEntity(element));
 		}
@@ -147,23 +180,32 @@ public class ElementServiceWithDB implements EnhancedElementService {
 	@Override
 	@Transactional
 	public void deleteAllElements(String adminEmail) {
-		// TODO Need to check if the mail belongs to an admin!
-		this.elementDao.deleteAll();
+		Optional<UserEntity> user = this.userDao.findById(adminEmail);
+		if (user.isPresent() && this.validator.isAdmin(user.get()))
+			this.elementDao.deleteAll();
+		else
+			throw new InvalidRoleException("Unauthorized user");
 	}
 
 	@Override
 	@Transactional
 	public void bindChildToParent(String managerEmail, String parentElementId, ElementIdBoundary input) {
-		ElementEntity parent = this.elementDao.findById(this.entityConverter.toEntityId(parentElementId))
-				.orElseThrow(() -> new ElementNotFoundException("Could not find element for id: " + parentElementId));
+		Optional<UserEntity> user = this.userDao.findById(managerEmail);
+		if (user.isPresent() && (this.validator.isManager(user.get()) || this.validator.isAdmin(user.get()))) {
+			ElementEntity parent = this.elementDao.findById(this.entityConverter.toEntityId(parentElementId))
+					.orElseThrow(
+							() -> new ElementNotFoundException("Could not find element for id: " + parentElementId));
 
-		ElementEntity child = this.elementDao.findById(this.entityConverter.toEntityId(input.getId()))
-				.orElseThrow(() -> new ElementNotFoundException("Could not find element for id: " + parentElementId));
+			ElementEntity child = this.elementDao.findById(this.entityConverter.toEntityId(input.getId())).orElseThrow(
+					() -> new ElementNotFoundException("Could not find element for id: " + parentElementId));
 
-		parent.bindChildAndParent(child);
-		this.elementDao.save(parent);
+			parent.bindChildAndParent(child);
+			this.elementDao.save(parent);
+		} else
+			throw new InvalidRoleException("Unauthorized user");
 	}
 
+	// ** Updated method exist with pagination
 	@Override
 	@Transactional(readOnly = true)
 	public Set<ElementBoundary> getAllElementChildrens(String userEmail, String parentElementId) {
@@ -173,6 +215,7 @@ public class ElementServiceWithDB implements EnhancedElementService {
 		return parent.getChildrens().stream().map(this.entityConverter::convertFromEntity).collect(Collectors.toSet());
 	}
 
+	// ** Updated method exist with pagination 
 	@Override
 	@Transactional(readOnly = true)
 	public Collection<ElementBoundary> getAllElementParents(String userEmail, String childElementId) {
@@ -187,22 +230,23 @@ public class ElementServiceWithDB implements EnhancedElementService {
 	public List<ElementBoundary> searchElementsByName(String userEmail, String name, int size, int page) {
 		Optional<UserEntity> user = this.userDao.findById(userEmail);
 		// If role is player return only elements with ACTIVE = TRUE
-		if (this.validator.isPlayer(user.get())) {
-			return this.elementDao.findAllByActiveAndNameLike(
-					true, name, PageRequest.of(page, size, Direction.ASC, "elementId"))
+		if (user.isPresent()) {
+			if (this.validator.isPlayer(user.get())) {
+				return this.elementDao
+						.findAllByActiveAndNameLike(true, name, PageRequest.of(page, size, Direction.ASC, "elementId"))
+				.stream()
+				.map(this.entityConverter::convertFromEntity)
+				.collect(Collectors.toList());
+			}
+
+			// If role is admin / manager
+			if (this.validator.isAdmin(user.get()) || this.validator.isManager(user.get()))
+			return this.elementDao.findAllByNameLike(
+					name, PageRequest.of(page, size, Direction.ASC, "elementId"))
 			.stream()
 			.map(this.entityConverter::convertFromEntity)
 			.collect(Collectors.toList());
-		}
-		
-		// If role is admin / manager
-		if (this.validator.isAdmin(user.get()) || this.validator.isManager(user.get()))
-		return this.elementDao.findAllByNameLike(
-				name, PageRequest.of(page, size, Direction.ASC, "elementId"))
-		.stream()
-		.map(this.entityConverter::convertFromEntity)
-		.collect(Collectors.toList());
-		
+		} else throw new UserNotFoundException("Invalid user");
 		// If for unknown reason there is other role to the user return empty list
 		return new ArrayList<ElementBoundary>();
 	}
@@ -212,22 +256,23 @@ public class ElementServiceWithDB implements EnhancedElementService {
 	public List<ElementBoundary> searchElementsByType(String userEmail, String type, int size, int page) {
 		Optional<UserEntity> user = this.userDao.findById(userEmail);
 		// If role is player return only elements with ACTIVE = TRUE
-		if (this.validator.isPlayer(user.get())) {
-			return this.elementDao.findAllByActiveAndTypeLike(
-					true, type, PageRequest.of(page, size, Direction.ASC, "elementId"))
+		if(user.isPresent()) {
+			if (this.validator.isPlayer(user.get())) {
+				return this.elementDao.findAllByActiveAndTypeLike(
+						true, type, PageRequest.of(page, size, Direction.ASC, "elementId"))
+				.stream()
+				.map(this.entityConverter::convertFromEntity)
+				.collect(Collectors.toList());
+			}
+			
+			// If role is admin / manager
+			if (this.validator.isAdmin(user.get()) || this.validator.isManager(user.get()))
+			return this.elementDao.findAllByTypeLike(
+					type, PageRequest.of(page, size, Direction.ASC, "elementId"))
 			.stream()
 			.map(this.entityConverter::convertFromEntity)
 			.collect(Collectors.toList());
-		}
-		
-		// If role is admin / manager
-		if (this.validator.isAdmin(user.get()) || this.validator.isManager(user.get()))
-		return this.elementDao.findAllByTypeLike(
-				type, PageRequest.of(page, size, Direction.ASC, "elementId"))
-		.stream()
-		.map(this.entityConverter::convertFromEntity)
-		.collect(Collectors.toList());
-		
+		} else throw new UserNotFoundException("Invalid user");
 		// If for an unknown reason the user has other role, return empty list.
 		return new ArrayList<ElementBoundary>();
 	}
@@ -237,22 +282,23 @@ public class ElementServiceWithDB implements EnhancedElementService {
 	public List<ElementBoundary> getAllElements(String userEmail, int size, int page) {
 		Optional<UserEntity> user = this.userDao.findById(userEmail);
 		// If role is player return only elements with ACTIVE = TRUE
-		if (this.validator.isPlayer(user.get())) {
-			return this.elementDao.findAllByActive(
-					true, PageRequest.of(page, size, Direction.ASC, "elementId"))
+		if(user.isPresent()) {
+			if (this.validator.isPlayer(user.get())) {
+				return this.elementDao.findAllByActive(
+						true, PageRequest.of(page, size, Direction.ASC, "elementId"))
+				.stream()
+				.map(this.entityConverter::convertFromEntity)
+				.collect(Collectors.toList());
+			}
+			
+			// If role is Admin / Manager
+			if (this.validator.isAdmin(user.get()) || this.validator.isManager(user.get()))
+			return this.elementDao.findAll(
+					PageRequest.of(page, size, Direction.ASC, "elementId"))
 			.stream()
 			.map(this.entityConverter::convertFromEntity)
 			.collect(Collectors.toList());
-		}
-		
-		// If role is Admin / Manager
-		if (this.validator.isAdmin(user.get()) || this.validator.isManager(user.get()))
-		return this.elementDao.findAll(
-				PageRequest.of(page, size, Direction.ASC, "elementId"))
-		.stream()
-		.map(this.entityConverter::convertFromEntity)
-		.collect(Collectors.toList());
-		
+		} else throw new UserNotFoundException("Invalid user");
 		// If for an unknown reason the user has other role, return empty list.
 		return new ArrayList<ElementBoundary>();
 	}
@@ -263,55 +309,56 @@ public class ElementServiceWithDB implements EnhancedElementService {
 		Optional<UserEntity> parent = this.userDao.findById(userEmail);
 		Optional<ElementEntity> parentElement = this.elementDao.findById(this.entityConverter.toEntityId(parentElementId));
 		// If role is player return only elements with ACTIVE = TRUE
-		if (this.validator.isPlayer(parent.get())) {
-			return this.elementDao.findAllByActiveAndParents(
-					true,
+		if(parent.isPresent() && parentElement.isPresent()) {
+			if (this.validator.isPlayer(parent.get())) {
+				return this.elementDao.findAllByActiveAndParents(
+						true,
+						parentElement.get(),
+						PageRequest.of(page, size, Direction.ASC, "elementId"))
+				.stream()
+				.map(this.entityConverter::convertFromEntity)
+				.collect(Collectors.toList());
+			}
+			
+			// If role is Admin / Manager
+			if (this.validator.isAdmin(parent.get()) || this.validator.isManager(parent.get()))
+			return this.elementDao.findAllByParents(
 					parentElement.get(),
 					PageRequest.of(page, size, Direction.ASC, "elementId"))
 			.stream()
 			.map(this.entityConverter::convertFromEntity)
 			.collect(Collectors.toList());
-		}
-		
-		// If role is Admin / Manager
-		if (this.validator.isAdmin(parent.get()) || this.validator.isManager(parent.get()))
-		return this.elementDao.findAllByParents(
-				parentElement.get(),
-				PageRequest.of(page, size, Direction.ASC, "elementId"))
-		.stream()
-		.map(this.entityConverter::convertFromEntity)
-		.collect(Collectors.toList());
-		
+		} else throw new UserNotFoundException("Invalid user");
 		// If for an unknown reason the user has other role, return empty list.
 		return new ArrayList<ElementBoundary>();
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	// @ TODO : Check if null !
 	public List<ElementBoundary> getAllElementParents(String userEmail, String childElementId, int size, int page) {
 		Optional<UserEntity> child = this.userDao.findById(userEmail);
 		Optional<ElementEntity> childElement = this.elementDao.findById(this.entityConverter.toEntityId(childElementId));
 		// If role is player return only elements with ACTIVE = TRUE
-		if (this.validator.isPlayer(child.get())) {
-			return this.elementDao.findAllByActiveAndChildrens(
-					true,
+		if(child.isPresent() && childElement.isPresent()) {
+			if (this.validator.isPlayer(child.get())) {
+				return this.elementDao.findAllByActiveAndChildrens(
+						true,
+						childElement.get(),
+						PageRequest.of(page, size, Direction.ASC, "elementId"))
+				.stream()
+				.map(this.entityConverter::convertFromEntity)
+				.collect(Collectors.toList());
+			}
+			
+			// If role is Admin / Manager
+			if (this.validator.isAdmin(child.get()) || this.validator.isManager(child.get()))
+			return this.elementDao.findAllByChildrens(
 					childElement.get(),
 					PageRequest.of(page, size, Direction.ASC, "elementId"))
 			.stream()
 			.map(this.entityConverter::convertFromEntity)
 			.collect(Collectors.toList());
-		}
-		
-		// If role is Admin / Manager
-		if (this.validator.isAdmin(child.get()) || this.validator.isManager(child.get()))
-		return this.elementDao.findAllByChildrens(
-				childElement.get(),
-				PageRequest.of(page, size, Direction.ASC, "elementId"))
-		.stream()
-		.map(this.entityConverter::convertFromEntity)
-		.collect(Collectors.toList());
-		
+		} else throw new UserNotFoundException("Invalid user");
 		// If for an unknown reason the user has other role, return empty list.
 		return new ArrayList<ElementBoundary>();
 	}
