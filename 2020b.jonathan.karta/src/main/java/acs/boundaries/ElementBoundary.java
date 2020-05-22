@@ -3,8 +3,8 @@ package acs.boundaries;
 import java.util.Date;
 import java.util.Map;
 
-import acs.data.Creator;
-import acs.data.Location;
+import acs.boundaries.data.Creator;
+import acs.boundaries.data.Location;
 
 public class ElementBoundary {
 
@@ -22,7 +22,7 @@ public class ElementBoundary {
 	}
 
 	public ElementBoundary(String elementId, String type, String name, Boolean active, Location location,
-			Date createdTimestamp, Creator createdBy, Map<String, Object> elementAttribute) {
+			Date createdTimestamp, Creator creator, Map<String, Object> elementAttribute) {
 		super();
 		this.elementId = elementId;
 		this.type = type;
@@ -30,7 +30,7 @@ public class ElementBoundary {
 		this.active = active;
 		this.location = location;
 		this.createdTimestamp = createdTimestamp;
-		this.createdBy = createdBy;
+		this.createdBy = creator;
 		this.elementAttribute = elementAttribute;
 	}
 

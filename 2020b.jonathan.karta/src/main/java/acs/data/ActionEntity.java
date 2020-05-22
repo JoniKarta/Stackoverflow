@@ -9,6 +9,8 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import acs.boundaries.data.Element;
+import acs.boundaries.data.Invoker;
 
 @Entity
 @Table(name="ACTIONS")
@@ -25,14 +27,14 @@ public class ActionEntity {
 		
 	}
 
-	public ActionEntity(Long actionId, String type, Element element, Date creation, Invoker invokedBy,
+	public ActionEntity(Long actionId, String type, acs.boundaries.data.Element element2, Date creation, acs.boundaries.data.Invoker invoker,
 			String actionAttributes) {
 		super();
 		this.actionId = actionId;
 		this.type = type;
-		this.element = element;
+		this.element = element2;
 		this.creation = creation;
-		this.invokedBy = invokedBy;
+		this.invokedBy = invoker;
 		this.actionAttributes = actionAttributes;
 	}
 	

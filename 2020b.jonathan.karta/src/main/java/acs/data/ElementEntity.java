@@ -16,6 +16,9 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import acs.boundaries.data.Creator;
+import acs.boundaries.data.Location;
+
 @Entity
 @Table(name = "ELEMENTS")
 public class ElementEntity {

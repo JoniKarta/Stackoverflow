@@ -3,8 +3,8 @@ package acs.boundaries;
 import java.util.Date;
 import java.util.Map;
 
-import acs.data.Element;
-import acs.data.Invoker;
+import acs.boundaries.data.Element;
+import acs.boundaries.data.Invoker;
 
 public class ActionBoundary {
 	private String actionId; 

@@ -20,7 +20,7 @@ import acs.dal.ElementDao;
 import acs.dal.LastElementIdValue;
 import acs.dal.LastElementValueDao;
 import acs.dal.UserDao;
-import acs.data.Creator;
+import acs.boundaries.data.Creator;
 import acs.data.ElementConverter;
 import acs.data.ElementEntity;
 import acs.data.UserEntity;

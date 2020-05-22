@@ -6,19 +6,18 @@ import java.util.Date;
 
 import javax.annotation.PostConstruct;
 
-import org.junit.AfterClass;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.web.client.RestTemplate;
+
 import acs.boundaries.ActionBoundary;
 import acs.boundaries.UserBoundary;
 import acs.boundaries.UserRole;
-import acs.data.Element;
-import acs.data.Invoker;
+import acs.boundaries.data.Element;
+import acs.boundaries.data.Invoker;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class ActionControllerKit1Tests {

@@ -10,6 +10,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import acs.boundaries.ActionBoundary;
 
+
+
 @Component
 public class ActionConverter {
 
@@ -21,7 +23,8 @@ public class ActionConverter {
 	}
 
 	public ActionEntity convertToEntity(ActionBoundary action) {
-		return new ActionEntity(toEntityId(action.getActionId()), action.getType(), action.getElement(),
+		return new ActionEntity
+				(toEntityId(action.getActionId()), action.getType(), action.getElement(),
 				action.getCreatedTimestamp(), action.getInvokedBy(),
 				marshActionAtrributes(action.getActionAttributes()));
 	}
