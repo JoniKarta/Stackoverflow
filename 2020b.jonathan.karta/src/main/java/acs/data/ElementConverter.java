@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import acs.boundaries.ElementBoundary;
+import acs.validations.ElementNotFoundException;
 
 @Component
 public class ElementConverter {
@@ -64,8 +65,11 @@ public class ElementConverter {
 	}
 
 	public Long toEntityId(String elementId) {
-		if (elementId != null) {
+		if (elementId != null) {try {
 			return Long.parseLong(elementId);
+		}catch(NumberFormatException e) {
+			throw new ElementNotFoundException("Invalid element ID");
+		}
 		} else {
 			return null;
 		}

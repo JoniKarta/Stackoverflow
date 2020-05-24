@@ -72,18 +72,26 @@ public class ActionServiceWithDB implements EnhancedActionService {
 	@Override
 	@Transactional
 	public Object invokeAction(ActionBoundary action) {
-		Optional<UserEntity> user = this.userDao.findById(action.getInvokedBy().getEmail());
-		Optional<ElementEntity> element = this.elementDao.findById(Long.parseLong(action.getElement().getElementId()));
-		if (!user.isPresent()) {
-			throw new UserNotFoundException("Could not find user with email: " + user.get().getEmail());
-		}
 
-		if (!this.validator.isPlayer(user.get())) {
+		UserEntity user = this.userDao.findById(action.getInvokedBy().getEmail()).orElseThrow(
+				() -> new UserNotFoundException("Could not found user: " + action.getInvokedBy().getEmail()));
+		Long elementId;
+		try {
+			elementId = Long.parseLong(action.getElement().getElementId());
+		} catch (NumberFormatException e) {
+			throw new ElementNotFoundException("Invalid element ID");
+		}
+		
+		ElementEntity element = this.elementDao.findById(elementId)
+				.orElseThrow(
+						() -> new ElementNotFoundException("Could not find element for id: " + action.getElement().getElementId()));
+
+		if (!this.validator.isPlayer(user)) {
 			throw new InvalidActionInvoker("You are not allowed for this kind of action");
 		}
 
-		if (!element.isPresent() || !element.get().getActive()) {
-			throw new ElementNotFoundException("Could not find element for id: " + element.get().getElementId());
+		if (!this.validator.isActive(element)) {
+			throw new ElementNotFoundException("Could not find element for id: " + element.getElementId());
 		}
 
 		if (!this.validator.validateActionElement(action)) {

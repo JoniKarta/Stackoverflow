@@ -32,7 +32,8 @@ public class Validator {
 	}
 
 	public boolean validateActionElement(ActionBoundary action) {
-		return action != null && action.getElement().getElementId() != null &&
+		return action != null && action.getElement() != null &&
+				action.getElement().getElementId() != null &&
 				!action.getElement().getElementId().isEmpty();
 	}
 
@@ -94,6 +95,6 @@ public class Validator {
 	}
 
 	public boolean isActive(ElementEntity elementEntity) {
-		return elementEntity.getActive().booleanValue();
+		return elementEntity != null && elementEntity.getActive() != null && elementEntity.getActive().booleanValue();
 	}
 }
