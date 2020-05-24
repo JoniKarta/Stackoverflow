@@ -69,27 +69,30 @@ public class ElementServiceWithDB implements EnhancedElementService {
 	@Transactional
 	public ElementBoundary create(String managerEmail, ElementBoundary element) {
 		Optional<UserEntity> user = this.userDao.findById(managerEmail);
-		if (user.isPresent() && (this.validator.isManager(user.get())
-				|| this.validator.isAdmin(user.get()))) {
-			if (!this.validator.validateElementName(element)) {
-				throw new InvalidElementName("Invalid element name");
+		if (user.isPresent()) {
+			if (this.validator.isManager(user.get()) || this.validator.isAdmin(user.get())) {
+				if (!this.validator.validateElementName(element)) {
+					throw new InvalidElementName("Invalid element name");
+				}
+
+				if (!this.validator.validateElementType(element)) {
+					throw new InvalidElementType("Invalid element type");
+				}
+
+				LastElementIdValue elementId = this.lastValueDao.save(new LastElementIdValue());
+				ElementEntity newElementEntity = this.entityConverter.convertToEntity(element);
+				newElementEntity.setCreatedBy(new Creator(managerEmail));
+				newElementEntity.setElementId(elementId.getLastIdValue());
+				newElementEntity.setCreatedTimestamp(new Date());
+
+				this.lastValueDao.delete(elementId);
+				newElementEntity = this.elementDao.save(newElementEntity);
+				return this.entityConverter.convertFromEntity(newElementEntity);
+			} else {
+				throw new InvalidRoleException("Unauthorized user");
 			}
-
-			if (!this.validator.validateElementType(element)) {
-				throw new InvalidElementType("Invalid element type");
-			}
-
-			LastElementIdValue elementId = this.lastValueDao.save(new LastElementIdValue());
-			ElementEntity newElementEntity = this.entityConverter.convertToEntity(element);
-			newElementEntity.setCreatedBy(new Creator(managerEmail));
-			newElementEntity.setElementId(elementId.getLastIdValue());
-			newElementEntity.setCreatedTimestamp(new Date());
-
-			this.lastValueDao.delete(elementId);
-			newElementEntity = this.elementDao.save(newElementEntity);
-			return this.entityConverter.convertFromEntity(newElementEntity);
 		} else {
-			throw new InvalidRoleException("Invalid user");
+			throw new UserNotFoundException("User with email not found: " + managerEmail);
 		}
 	}
 
