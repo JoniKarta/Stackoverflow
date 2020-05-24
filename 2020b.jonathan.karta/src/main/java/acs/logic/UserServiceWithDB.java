@@ -20,8 +20,10 @@ import acs.logic.services.EnhancedUserService;
 import acs.validations.ElementNotFoundException;
 import acs.validations.InvalidAvatarException;
 import acs.validations.InvalidEmailFormatException;
+import acs.validations.InvalidRoleException;
 import acs.validations.InvalidUsernameException;
 import acs.validations.RoleNotFoundException;
+import acs.validations.UserNotFoundException;
 import acs.validations.Validator;
 
 @Service
@@ -116,16 +118,26 @@ public class UserServiceWithDB implements EnhancedUserService {
 	@Override
 	@Transactional
 	public void deleteAllUsers(String adminEmail) {
-		this.userDao.deleteAll();
+		UserEntity user = this.userDao.findById(adminEmail)
+				.orElseThrow(() -> new UserNotFoundException("Could not found user: " + adminEmail));
+		if (this.validator.isAdmin(user)) {
+			this.userDao.deleteAll();
+		} else {
+			throw new InvalidRoleException("Unauthorized user role");
+		}
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<UserBoundary> getAllUsers(String adminEmail, int size, int page) {
-		return this.userDao.findAll(
-				PageRequest.of(page, size,Direction.ASC,"email"))
-				.getContent() 
-				.stream()
-				.map(this.userConverter :: fromEntity)
-				.collect(Collectors.toList());
+		UserEntity user = this.userDao.findById(adminEmail)
+				.orElseThrow(() -> new UserNotFoundException("Could not found user: " + adminEmail));
+		if (this.validator.isAdmin(user) || this.validator.isManager(user)) {
+			return this.userDao.findAll(PageRequest.of(page, size, Direction.ASC, "email")).getContent().stream()
+					.map(this.userConverter::fromEntity).collect(Collectors.toList());
+
+		} else {
+			throw new InvalidRoleException("Unauthorized user role");
+		}
 	}
 }

@@ -89,7 +89,7 @@ public class ElementServiceWithDB implements EnhancedElementService {
 			newElementEntity = this.elementDao.save(newElementEntity);
 			return this.entityConverter.convertFromEntity(newElementEntity);
 		} else {
-			throw new InvalidRoleException("Unauthorized user");
+			throw new InvalidRoleException("Invalid user");
 		}
 	}
 
