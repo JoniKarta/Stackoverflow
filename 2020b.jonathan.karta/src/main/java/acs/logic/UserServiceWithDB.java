@@ -132,7 +132,7 @@ public class UserServiceWithDB implements EnhancedUserService {
 	public List<UserBoundary> getAllUsers(String adminEmail, int size, int page) {
 		UserEntity user = this.userDao.findById(adminEmail)
 				.orElseThrow(() -> new UserNotFoundException("Could not found user: " + adminEmail));
-		if (this.validator.isAdmin(user) || this.validator.isManager(user)) {
+		if (this.validator.isAdmin(user)) {
 			return this.userDao.findAll(PageRequest.of(page, size, Direction.ASC, "email")).getContent().stream()
 					.map(this.userConverter::fromEntity).collect(Collectors.toList());
 

@@ -27,12 +27,12 @@ public class ActionEntity {
 		
 	}
 
-	public ActionEntity(Long actionId, String type, acs.boundaries.data.Element element2, Date creation, acs.boundaries.data.Invoker invoker,
+	public ActionEntity(Long actionId, String type, Element element, Date creation, Invoker invoker,
 			String actionAttributes) {
 		super();
 		this.actionId = actionId;
 		this.type = type;
-		this.element = element2;
+		this.element = element;
 		this.creation = creation;
 		this.invokedBy = invoker;
 		this.actionAttributes = actionAttributes;

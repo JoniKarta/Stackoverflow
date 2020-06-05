@@ -137,4 +137,9 @@ public interface ElementDao extends PagingAndSortingRepository<ElementEntity, Lo
 	 */
 	public List<ElementEntity> findAllByActiveAndChildrens(@Param("active") boolean active,
 			@Param("childrens") ElementEntity childrens, Pageable pageable);
+	
+	public List<ElementEntity> findAllByActiveAndLocation_latBetweenAndLocation_lngBetween(
+			@Param("active") boolean active,
+			@Param("minLat") double minLat,
+			@Param("maxLat") double maxLat, @Param("minLng") double minLng, @Param("maxLng") double maxLng);
 }

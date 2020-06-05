@@ -20,11 +20,11 @@ import acs.dal.LastActionValueDao;
 import acs.dal.UserDao;
 import acs.data.ActionConverter;
 import acs.data.ActionEntity;
+import acs.data.ElementConverter;
 import acs.data.ElementEntity;
 import acs.data.UserEntity;
 import acs.logic.services.EnhancedActionService;
 import acs.validations.ElementNotFoundException;
-import acs.validations.InvalidActionElement;
 import acs.validations.InvalidActionInvoker;
 import acs.validations.InvalidActionType;
 import acs.validations.UserNotFoundException;
@@ -38,6 +38,7 @@ public class ActionServiceWithDB implements EnhancedActionService {
 	private Validator validator;
 	private UserDao userDao;
 	private ElementDao elementDao;
+	private ElementConverter elementConverter;
 
 	@Autowired
 	public ActionServiceWithDB(Validator validator) {
@@ -52,6 +53,11 @@ public class ActionServiceWithDB implements EnhancedActionService {
 	@Autowired
 	public void setActionConverter(ActionConverter actionConverter) {
 		this.actionConverter = actionConverter;
+	}
+	
+	@Autowired
+	public void setElementConverter(ElementConverter elementConverter) {
+		this.elementConverter = elementConverter;
 	}
 
 	@Autowired
@@ -75,27 +81,27 @@ public class ActionServiceWithDB implements EnhancedActionService {
 
 		UserEntity user = this.userDao.findById(action.getInvokedBy().getEmail()).orElseThrow(
 				() -> new UserNotFoundException("Could not found user: " + action.getInvokedBy().getEmail()));
-		Long elementId;
-		try {
-			elementId = Long.parseLong(action.getElement().getElementId());
-		} catch (NumberFormatException e) {
-			throw new ElementNotFoundException("Invalid element ID");
-		}
 		
-		ElementEntity element = this.elementDao.findById(elementId)
-				.orElseThrow(
-						() -> new ElementNotFoundException("Could not find element for id: " + action.getElement().getElementId()));
-
 		if (!this.validator.isPlayer(user)) {
 			throw new InvalidActionInvoker("You are not allowed for this kind of action");
 		}
+		if (!action.getType().equals("Perimeter")) {
+			Long elementId;
+			try {
+				if (!this.validator.validateActionElement(action)) {
+					throw new ElementNotFoundException("Invalid element ID");
+				}
+				elementId = Long.parseLong(action.getElement().getElementId());
+			} catch (NumberFormatException e) {
+				throw new ElementNotFoundException("Invalid element ID");
+			}
 
-		if (!this.validator.isActive(element)) {
-			throw new ElementNotFoundException("Could not find element for id: " + element.getElementId());
-		}
+			ElementEntity element = this.elementDao.findById(elementId).orElseThrow(() -> new ElementNotFoundException(
+					"Could not find element for id: " + action.getElement().getElementId()));
 
-		if (!this.validator.validateActionElement(action)) {
-			throw new InvalidActionElement("Action done on invalid element");
+			if (!this.validator.isActive(element)) {
+				throw new ElementNotFoundException("Could not find element for id: " + element.getElementId());
+			}
 		}
 
 		if (!this.validator.validateActionType(action)) {
@@ -108,6 +114,18 @@ public class ActionServiceWithDB implements EnhancedActionService {
 		entity.setCreation(new Date());
 		lastValueDao.delete(idValue);
 		entity = actionDao.save(entity);
+		
+		if (action.getType().equals("Perimeter")) {
+			return elementDao
+			.findAllByActiveAndLocation_latBetweenAndLocation_lngBetween(true,
+					(Double) action.getActionAttributes().get("minLat"),
+					(Double) action.getActionAttributes().get("maxLat"),
+					(Double) action.getActionAttributes().get("minLng"),
+					(Double) action.getActionAttributes().get("maxLng"))
+			.stream().map(this.elementConverter::convertFromEntity)
+			.collect(Collectors.toList());
+		}
+		
 		return actionConverter.convertFromEntity(entity);
 	}
 
@@ -143,5 +161,4 @@ public class ActionServiceWithDB implements EnhancedActionService {
 				.map(entity -> (ActionBoundary) this.actionConverter.convertFromEntity(entity))
 				.collect(Collectors.toList());
 	}
-
 }
