@@ -23,14 +23,14 @@ import acs.boundaries.data.Location;
 @Table(name = "ELEMENTS")
 public class ElementEntity {
 
-	private Long elementId; // In the ElementBoundary it was String
+	private Long elementId;
 	private String type;
 	private String name;
 	private Boolean active;
 	private Date createdTimestamp;
 	private Creator createdBy;
 	private Location location;
-	private String elementAttribute; // In the ElementBoundary it was map
+	private String elementAttribute;
 	private Set<ElementEntity> parents;
 	private Set<ElementEntity> childrens;
 

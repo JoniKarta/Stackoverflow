@@ -12,13 +12,12 @@ public class UserConverter {
 
 	@PostConstruct
 	public void setup() {
-		// No mapper needed atm
+
 	}
 
 	public UserBoundary fromEntity(UserEntity user) {
 
 		try {
-			// There is no difference at the moment between UserEntity/Boundary
 			return new UserBoundary(
 				user.getEmail(),
 				user.getRole() != null ? UserRole.valueOf(user.getRole().name().toUpperCase()) : null,

@@ -15,7 +15,6 @@ public interface EnhancedElementService extends ElementService{
 	
 	public Collection<ElementBoundary> getAllElementParents(String userEmail, String childElementId);
 
-	// TODO: Check whether to use: List/Set or Collection
 	public List<ElementBoundary> searchElementsByName(String userEmail, String name, int size, int page);
 
 	public List<ElementBoundary> searchElementsByType(String userEmail, String type, int size, int page);

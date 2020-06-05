@@ -6,16 +6,8 @@ import java.util.Map;
 import acs.boundaries.data.Creator;
 import acs.boundaries.data.Location;
 
-/**
- * 
- * This class mediates between the user's input to the server's logic
- *
- */
 public class ElementBoundary {
 
-	/**
-	 * Various attributes of an element boundary
-	 */
 	private String elementId;
 	private String type;
 	private String name;
@@ -29,19 +21,7 @@ public class ElementBoundary {
 		super();
 	}
 
-	   /**
-		   * Creates an element boundary with the user's input from the RequestBody
-		   * @param 
-		   * @param
-		   * @param
-		   * @param
-		   * @param
-		   * @param
-		   * @param
-		   * @param
-		   * @param
-		   * @param
-		   */
+
 	public ElementBoundary(String elementId, String type, String name, Boolean active, Location location,
 			Date createdTimestamp, Creator creator, Map<String, Object> elementAttribute) {
 		super();

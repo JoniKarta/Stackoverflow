@@ -16,12 +16,12 @@ import acs.boundaries.data.Invoker;
 @Table(name="ACTIONS")
 public class ActionEntity {
 
-	private Long actionId; // In the ActionBoundary it was String
+	private Long actionId; 
 	private String type;
 	private Element element;
 	private Date creation;
 	private Invoker invokedBy;
-	private String actionAttributes; // In the ActionBoundary it was map
+	private String actionAttributes;
 	
 	public ActionEntity(){
 		

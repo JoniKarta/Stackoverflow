@@ -105,14 +105,19 @@ public class UserServiceWithDB implements EnhancedUserService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<UserBoundary> getAllUsers(String adminEmail) {
-		List<UserBoundary> rv = new ArrayList<>();
-
-		Iterable<UserEntity> content = this.userDao.findAll();
-
-		for (UserEntity user : content) {
-			rv.add(this.userConverter.fromEntity(user));
+		UserEntity myUser = this.userDao.findById(adminEmail)
+				.orElseThrow(() -> new UserNotFoundException("Could not found user: " + adminEmail));
+		
+		if (this.validator.isAdmin(myUser)) {
+			List<UserBoundary> rv = new ArrayList<>();
+			Iterable<UserEntity> content = this.userDao.findAll();
+			for (UserEntity user : content) {
+				rv.add(this.userConverter.fromEntity(user));
+			}
+			return rv;
+		} else {
+			throw new InvalidRoleException("Unauthorized user role");
 		}
-		return rv;
 	}
 
 	@Override

@@ -70,7 +70,7 @@ public class ElementServiceWithDB implements EnhancedElementService {
 	public ElementBoundary create(String managerEmail, ElementBoundary element) {
 		Optional<UserEntity> user = this.userDao.findById(managerEmail);
 		if (user.isPresent()) {
-			if (this.validator.isManager(user.get()) || this.validator.isAdmin(user.get())) {
+			if (this.validator.isManager(user.get())) {
 				if (!this.validator.validateElementName(element)) {
 					throw new InvalidElementName("Invalid element name");
 				}
@@ -100,9 +100,8 @@ public class ElementServiceWithDB implements EnhancedElementService {
 	@Transactional
 	public ElementBoundary update(String managerEmail, String elementId, ElementBoundary update) {
 		Optional<UserEntity> user = this.userDao.findById(managerEmail);
-		if (user.isPresent() && (this.validator.isManager(user.get()) || this.validator.isAdmin(user.get()))) {
+		if (user.isPresent() && (this.validator.isManager(user.get()))) {
 			ElementBoundary existing = this.getSpecificElement(managerEmail, elementId);
-			// Note there are 3 attributes that not gets updated (elemendId,Date, Creator)
 			if (this.validator.validateElementType(update)) {
 				existing.setType(update.getType());
 			}
@@ -153,7 +152,6 @@ public class ElementServiceWithDB implements EnhancedElementService {
 		}
 	}
 
-	// ** New method of getAllElements with pagination exist
 	@Override
 	@Transactional(readOnly = true)
 	public List<ElementBoundary> getAll(String userEmail) {
@@ -161,7 +159,7 @@ public class ElementServiceWithDB implements EnhancedElementService {
 		List<ElementBoundary> rv = new ArrayList<>();
 		Iterable<ElementEntity> content = null;
 		if (user.isPresent()) {
-			if (this.validator.isManager(user.get()) || this.validator.isAdmin(user.get()))
+			if (this.validator.isManager(user.get()))
 				content = this.elementDao.findAll();
 			else
 				content = this.elementDao.findAllByActive(false);
@@ -188,7 +186,7 @@ public class ElementServiceWithDB implements EnhancedElementService {
 	@Transactional
 	public void bindChildToParent(String managerEmail, String parentElementId, ElementIdBoundary input) {
 		Optional<UserEntity> user = this.userDao.findById(managerEmail);
-		if (user.isPresent() && (this.validator.isManager(user.get()) || this.validator.isAdmin(user.get()))) {
+		if (user.isPresent() && (this.validator.isManager(user.get()))) {
 			ElementEntity parent = this.elementDao.findById(this.entityConverter.toEntityId(parentElementId))
 					.orElseThrow(
 							() -> new ElementNotFoundException("Could not find element for id: " + parentElementId));
@@ -202,7 +200,6 @@ public class ElementServiceWithDB implements EnhancedElementService {
 			throw new InvalidRoleException("Unauthorized user");
 	}
 
-	// ** Updated method exist with pagination
 	@Override
 	@Transactional(readOnly = true)
 	public Set<ElementBoundary> getAllElementChildrens(String userEmail, String parentElementId) {
@@ -215,7 +212,7 @@ public class ElementServiceWithDB implements EnhancedElementService {
 				.collect(Collectors.toSet());
 	}
 
-	// ** Updated method exist with pagination 
+
 	@Override
 	@Transactional(readOnly = true)
 	public Collection<ElementBoundary> getAllElementParents(String userEmail, String childElementId) {
@@ -232,7 +229,6 @@ public class ElementServiceWithDB implements EnhancedElementService {
 	@Transactional(readOnly = true)
 	public List<ElementBoundary> searchElementsByName(String userEmail, String name, int size, int page) {
 		Optional<UserEntity> user = this.userDao.findById(userEmail);
-		// If role is player return only elements with ACTIVE = TRUE
 		if (user.isPresent()) {
 			if (this.validator.isPlayer(user.get())) {
 				return this.elementDao
@@ -242,15 +238,14 @@ public class ElementServiceWithDB implements EnhancedElementService {
 				.collect(Collectors.toList());
 			}
 
-			// If role is admin / manager
-			if (this.validator.isAdmin(user.get()) || this.validator.isManager(user.get()))
+
+			if (this.validator.isManager(user.get()))
 			return this.elementDao.findAllByNameLike(
 					name, PageRequest.of(page, size, Direction.ASC, "elementId"))
 			.stream()
 			.map(this.entityConverter::convertFromEntity)
 			.collect(Collectors.toList());
 		} else throw new UserNotFoundException("Invalid user");
-		// If for unknown reason there is other role to the user return empty list
 		return new ArrayList<ElementBoundary>();
 	}
 
@@ -258,7 +253,6 @@ public class ElementServiceWithDB implements EnhancedElementService {
 	@Transactional(readOnly = true)
 	public List<ElementBoundary> searchElementsByType(String userEmail, String type, int size, int page) {
 		Optional<UserEntity> user = this.userDao.findById(userEmail);
-		// If role is player return only elements with ACTIVE = TRUE
 		if(user.isPresent()) {
 			if (this.validator.isPlayer(user.get())) {
 				return this.elementDao.findAllByActiveAndTypeLike(
@@ -268,15 +262,13 @@ public class ElementServiceWithDB implements EnhancedElementService {
 				.collect(Collectors.toList());
 			}
 			
-			// If role is admin / manager
-			if (this.validator.isAdmin(user.get()) || this.validator.isManager(user.get()))
+			if (this.validator.isManager(user.get()))
 			return this.elementDao.findAllByTypeLike(
 					type, PageRequest.of(page, size, Direction.ASC, "elementId"))
 			.stream()
 			.map(this.entityConverter::convertFromEntity)
 			.collect(Collectors.toList());
 		} else throw new UserNotFoundException("Invalid user");
-		// If for an unknown reason the user has other role, return empty list.
 		return new ArrayList<ElementBoundary>();
 	}
 
@@ -284,7 +276,6 @@ public class ElementServiceWithDB implements EnhancedElementService {
 	@Transactional(readOnly = true)
 	public List<ElementBoundary> getAllElements(String userEmail, int size, int page) {
 		Optional<UserEntity> user = this.userDao.findById(userEmail);
-		// If role is player return only elements with ACTIVE = TRUE
 		if(user.isPresent()) {
 			if (this.validator.isPlayer(user.get())) {
 				return this.elementDao.findAllByActive(
@@ -294,15 +285,13 @@ public class ElementServiceWithDB implements EnhancedElementService {
 				.collect(Collectors.toList());
 			}
 			
-			// If role is Admin / Manager
-			if (this.validator.isAdmin(user.get()) || this.validator.isManager(user.get()))
+			if (this.validator.isManager(user.get()))
 			return this.elementDao.findAll(
 					PageRequest.of(page, size, Direction.ASC, "elementId"))
 			.stream()
 			.map(this.entityConverter::convertFromEntity)
 			.collect(Collectors.toList());
 		} else throw new UserNotFoundException("Invalid user");
-		// If for an unknown reason the user has other role, return empty list.
 		return new ArrayList<ElementBoundary>();
 	}
 
@@ -311,7 +300,7 @@ public class ElementServiceWithDB implements EnhancedElementService {
 	public List<ElementBoundary> getAllElementChildrens(String userEmail, String parentElementId, int size, int page) {
 		Optional<UserEntity> parent = this.userDao.findById(userEmail);
 		Optional<ElementEntity> parentElement = this.elementDao.findById(this.entityConverter.toEntityId(parentElementId));
-		// If role is player return only elements with ACTIVE = TRUE
+		
 		if(parent.isPresent() && parentElement.isPresent()) {
 			if (this.validator.isPlayer(parent.get())) {
 				return this.elementDao.findAllByActiveAndParents(
@@ -323,8 +312,7 @@ public class ElementServiceWithDB implements EnhancedElementService {
 				.collect(Collectors.toList());
 			}
 			
-			// If role is Admin / Manager
-			if (this.validator.isAdmin(parent.get()) || this.validator.isManager(parent.get()))
+			if (this.validator.isManager(parent.get()))
 			return this.elementDao.findAllByParents(
 					parentElement.get(),
 					PageRequest.of(page, size, Direction.ASC, "elementId"))
@@ -332,7 +320,6 @@ public class ElementServiceWithDB implements EnhancedElementService {
 			.map(this.entityConverter::convertFromEntity)
 			.collect(Collectors.toList());
 		} else throw new UserNotFoundException("Invalid user");
-		// If for an unknown reason the user has other role, return empty list.
 		return new ArrayList<ElementBoundary>();
 	}
 
@@ -341,7 +328,7 @@ public class ElementServiceWithDB implements EnhancedElementService {
 	public List<ElementBoundary> getAllElementParents(String userEmail, String childElementId, int size, int page) {
 		Optional<UserEntity> child = this.userDao.findById(userEmail);
 		Optional<ElementEntity> childElement = this.elementDao.findById(this.entityConverter.toEntityId(childElementId));
-		// If role is player return only elements with ACTIVE = TRUE
+		
 		if(child.isPresent() && childElement.isPresent()) {
 			if (this.validator.isPlayer(child.get())) {
 				return this.elementDao.findAllByActiveAndChildrens(
@@ -353,8 +340,7 @@ public class ElementServiceWithDB implements EnhancedElementService {
 				.collect(Collectors.toList());
 			}
 			
-			// If role is Admin / Manager
-			if (this.validator.isAdmin(child.get()) || this.validator.isManager(child.get()))
+			if (this.validator.isManager(child.get()))
 			return this.elementDao.findAllByChildrens(
 					childElement.get(),
 					PageRequest.of(page, size, Direction.ASC, "elementId"))
@@ -362,7 +348,6 @@ public class ElementServiceWithDB implements EnhancedElementService {
 			.map(this.entityConverter::convertFromEntity)
 			.collect(Collectors.toList());
 		} else throw new UserNotFoundException("Invalid user");
-		// If for an unknown reason the user has other role, return empty list.
 		return new ArrayList<ElementBoundary>();
 	}
 }

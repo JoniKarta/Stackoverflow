@@ -8,7 +8,6 @@ public class Location {
 	private double lng;
 
 	public Location() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public Location(double lat, double lng) {
