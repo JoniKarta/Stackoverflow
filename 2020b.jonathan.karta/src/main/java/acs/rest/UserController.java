@@ -50,5 +50,4 @@ public class UserController {
 			@PathVariable("userEmail") String userEmail) {
 		return this.userService.updateUser(userEmail, input);
 	}
-
 }

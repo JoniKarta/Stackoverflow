@@ -85,7 +85,7 @@ public class ActionServiceWithDB implements EnhancedActionService {
 		if (!this.validator.isPlayer(user)) {
 			throw new InvalidActionInvoker("You are not allowed for this kind of action");
 		}
-		if (!action.getType().equals("Perimeter")) {
+		if (action!= null && action.getType() != null && !action.getType().equals("Perimeter")) {
 			Long elementId;
 			try {
 				if (!this.validator.validateActionElement(action)) {
