@@ -35,11 +35,8 @@ public class UserController {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public UserBoundary createUserBoundary(
-			/* @Validated */ @RequestBody UserBoundary input/* , BindingResult bindingResult */) {
-		/*
-		 * if(bindingResult.hasErrors()) { throw new
-		 * InvalidEmailFormatException("Invalid email"); }
-		 */
+		 @RequestBody UserBoundary input) {
+		
 		return this.userService.createUser(input);
 	}
 

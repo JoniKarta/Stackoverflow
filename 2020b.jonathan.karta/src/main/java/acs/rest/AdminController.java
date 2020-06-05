@@ -36,25 +36,21 @@ public class AdminController {
 	}
 	
 	
-	// Delete All Users
 	@RequestMapping(path = "/acs/admin/users/{adminEmail}", method = RequestMethod.DELETE)
 	public void deleteAllUsers(@PathVariable("adminEmail") String adminEmail) {
 		this.userService.deleteAllUsers(adminEmail);
 	}
 
-	// Delete All Elements
 	@RequestMapping(path = "/acs/admin/elements/{adminEmail}", method = RequestMethod.DELETE)
 	public void deleteAllElements(@PathVariable("adminEmail") String adminEmail) {
 		this.elementService.deleteAllElements(adminEmail);
 	}
 
-	// Delete All Actions
 	@RequestMapping(path = "/acs/admin/actions/{adminEmail}", method = RequestMethod.DELETE)
 	public void deleteAllActions(@PathVariable("adminEmail") String adminEmail) {
 		actionService.deleteAllActions(adminEmail);
 	}
 
-	// Get All User Boundary
 	@RequestMapping(path = "/acs/admin/users/{adminEmail}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public UserBoundary[] getAllUserBoundary(@PathVariable("adminEmail") String adminEmail,
 			@RequestParam(name = "page", required = false, defaultValue = "0") int page, 
@@ -62,7 +58,6 @@ public class AdminController {
 		return this.userService.getAllUsers(adminEmail,size,page).toArray(new UserBoundary[0]);
 	}
 
-	// Get All Actions
 	@RequestMapping(path = "/acs/admin/actions/{adminEmail}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ActionBoundary[] getAllActions(@PathVariable("adminEmail") String adminEmail,
 			@RequestParam(name = "page", required = false, defaultValue = "0") int page, 
